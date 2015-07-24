@@ -1,0 +1,9 @@
+# ignored files
+*~
+*.DS_Store
+.vagrant/
+*.iml
+*.swp
+*.history
+**/target/
+**/.idea/
