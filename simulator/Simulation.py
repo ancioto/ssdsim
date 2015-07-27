@@ -8,12 +8,14 @@ This is the main simulation class.
 
 # IMPORTS
 
+
+# SIMULATION CLASS
 class Simulation:
-    # ATTRIBUTES
-    elapsed_time = 0
-    """ Keep track of the total elapsed time of the current simulation in [microseconds].
-        A microsecond is 10^-6 seconds. This variable is an integer.
     """
+    This class ...
+    """
+
+    # ATTRIBUTES
 
     # CONSTRUCTOR
 
