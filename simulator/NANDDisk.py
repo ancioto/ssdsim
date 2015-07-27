@@ -196,6 +196,21 @@ class NANDDisk:
             tot += self._ftl[b]['dirty']
         return tot
 
+    def elapsed_time(self):
+        """
+
+        :return:
+        """
+        return Decimal(self._elapsed_time) / Decimal(1000000)
+
+    def IOPS(self):
+        """
+
+        :return:
+        """
+        ops = self._page_write_executed + self._page_read_executed
+        return int(ops / self.elapsed_time())
+
     # DISK OPERATIONS UTILITIES
     @check_block
     def get_empty_page(self, block=0):
@@ -272,7 +287,7 @@ class NANDDisk:
             # is the block full?
             if self._ftl[block]['empty'] <= 0:
                 # yes, we need a policy to decide how to write
-                if not self.full_block_write_policy(block=block):
+                if self.full_block_write_policy(block=block):
                     # OK, page updated
                     # change the status of this page
                     self._ftl[block][page] = common.PAGE_DIRTY
@@ -318,7 +333,6 @@ class NANDDisk:
         if s == common.PAGE_IN_USE:
             # update statistics
             self._elapsed_time += self.read_page_time  # time spent to read the data
-            self._page_read_executed += 1  # one page read
             return True
 
         # no valid data to read
