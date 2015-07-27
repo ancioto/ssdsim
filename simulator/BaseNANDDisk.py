@@ -257,7 +257,7 @@ class BaseNANDDisk:
                 # FOUND a block with empty pages
                 p = self.get_empty_page(block=b)
 
-                # change the status of the original
+                # change the status of the original page
                 self._ftl[block][page] = common.PAGE_DIRTY
 
                 # change the status of the new page
@@ -349,6 +349,7 @@ class BaseNANDDisk:
         if s == common.PAGE_IN_USE:
             # update statistics
             self._elapsed_time += self.read_page_time  # time spent to read the data
+            self._page_read_executed += 1  # we executed a read of a page
             return True
 
         # no valid data to read
