@@ -3,7 +3,7 @@
 # see README.txt or LICENSE.txt for details
 
 """
-This is the base class to handle a single NAND cell.
+This is the base class to handle a single NAND cell in a very naive and basic implementation.
 """
 
 # IMPORTS
@@ -14,7 +14,7 @@ from decimal import *
 # USEFUL DECORATORS
 def check_block(f):
     """
-    A wrapper to validate the block parameter for a NANDDisk class.
+    A wrapper to validate the block parameter for a BaseNANDDisk class.
     """
     def wrapper(s, **kwargs):
         if 'block' in kwargs:
@@ -29,7 +29,7 @@ def check_block(f):
 
 def check_page(f):
     """
-    A wrapper to validate the page parameter for a NANDDisk class.
+    A wrapper to validate the page parameter for a BaseNANDDisk class.
     """
     def wrapper(s, **kwargs):
         if 'page' in kwargs:
@@ -42,8 +42,8 @@ def check_page(f):
     return wrapper
 
 
-# NANDDISK class
-class NANDDisk:
+# BaseNANDDISK class
+class BaseNANDDisk:
     """
     This class ...
     """
@@ -110,6 +110,11 @@ class NANDDisk:
 
     _page_write_executed = 0
     """ Total number of page actually written by the disk.
+        This is an integer value.
+    """
+
+    _page_write_failed = 0
+    """ Total number of page unable to be writted due to disk error (no empty pages).
         This is an integer value.
     """
 
@@ -196,6 +201,13 @@ class NANDDisk:
             tot += self._ftl[b]['dirty']
         return tot
 
+    def failure_rate(self):
+        """
+
+        :return:
+        """
+        return (Decimal(self._page_write_failed) * 100) / Decimal(self._page_write_executed)
+
     def elapsed_time(self):
         """
 
@@ -221,7 +233,7 @@ class NANDDisk:
         """
         # first check availability
         if self._ftl[block]['empty'] <= 0:
-            raise ValueError("No free pages available in this block.")
+            raise ValueError("No empty pages available in this block.")
 
         # get the first empty page available in the provided block
         for p in range(0, self.pages_per_block):
@@ -229,10 +241,11 @@ class NANDDisk:
                 return p
 
         # should not be reachable
-        return -1
+        raise ValueError("No empty pages available in this block.")
 
     @check_block
-    def full_block_write_policy(self, block=0):
+    @check_page
+    def full_block_write_policy(self, block=0, page=0):
         """
 
         :param block:
@@ -244,10 +257,14 @@ class NANDDisk:
                 # FOUND a block with empty pages
                 p = self.get_empty_page(block=b)
 
+                # change the status of the original
+                self._ftl[block][page] = common.PAGE_DIRTY
+
                 # change the status of the new page
                 self._ftl[b][p] = common.PAGE_IN_USE
 
                 # we need to update the statistics
+                self._ftl[block]['dirty'] += 1  # we have one more dirty page in this block
                 self._ftl[b]['empty'] -= 1  # we lost one empty page in this block
                 self._elapsed_time += self.write_page_time  # time spent to write the data
                 self._page_write_executed += 1  # one page written
@@ -287,15 +304,13 @@ class NANDDisk:
             # is the block full?
             if self._ftl[block]['empty'] <= 0:
                 # yes, we need a policy to decide how to write
-                if self.full_block_write_policy(block=block):
-                    # OK, page updated
-                    # change the status of this page
-                    self._ftl[block][page] = common.PAGE_DIRTY
-
-                    self._ftl[block]['dirty'] += 1  # we have one more dirty page in this block
+                if self.full_block_write_policy(block=block, page=page):
+                    # all statistic MUST BE updated inside the policy method
                     return True
                 else:
                     # we didn't found a suitable place to write the new data, the write request failed
+                    # this is a disk error: the garbage collector was unable to make room for new data
+                    self._page_write_failed += 1
                     return False
             else:
                 # no, we still have space, we just need a new empty page on this block
@@ -316,6 +331,7 @@ class NANDDisk:
                 return True
 
         # if status is DIRTY => we discard this write operation
+        # (it's not a disk error, it's a bad random value)
         return False
 
     @check_block
