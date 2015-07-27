@@ -20,7 +20,7 @@ d1 = BaseNANDDisk()
 d2 = NANDDiskInPlace()
 
 # write approximately 10 MiB of random data
-sample = 100
+sample = 20000
 b = randint.rvs(0, d1.total_blocks, size=sample)
 p = randint.rvs(0, d1.pages_per_block, size=sample)
 

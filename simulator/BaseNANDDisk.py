@@ -97,58 +97,58 @@ class BaseNANDDisk:
         This is an integer value. Must be greater than zero.
     """
 
-    # INTERNAL STATISTICS
-    _elapsed_time = 0
-    """ Keep track of the total elapsed time for the requested operations [microseconds].
-        A microsecond is 10^-6 seconds. This variable is an integer.
-    """
-
-    _host_page_write_request = 0
-    """ Number of page written as requested by the host.
-        This is an integer value.
-    """
-
-    _page_write_executed = 0
-    """ Total number of page actually written by the disk.
-        This is an integer value.
-    """
-
-    _page_write_failed = 0
-    """ Total number of page unable to be writted due to disk error (no empty pages).
-        This is an integer value.
-    """
-
-    _host_page_read_request = 0
-    """ Number of page read as requested by the host.
-        This is an integer value.
-    """
-
-    _page_read_executed = 0
-    """ Total number of page actually read by the disk.
-        This is an integer value.
-    """
-
-    _block_erase_executed = 0
-    """ Total number of block erase executed.
-        This is an integer value.
-    """
-
-    # INTERNAL STATE
-    _ftl = dict()
-    """ This is the full state of the flash memory.
-        It's an array of blocks. Every block is an array of page.
-        For every page we keep the status of the page.
-        Furthermore, every block has the following extra information:
-            empty:  total number of empty pages in the given block;
-            dirty:  total number of dirty pages in the given block.
-    """
-
     # CONSTRUCTOR
     def __init__(self):
         """
 
         :return:
         """
+        # INTERNAL STATISTICS
+        self._elapsed_time = 0
+        """ Keep track of the total elapsed time for the requested operations [microseconds].
+            A microsecond is 10^-6 seconds. This variable is an integer.
+        """
+
+        self._host_page_write_request = 0
+        """ Number of page written as requested by the host.
+            This is an integer value.
+        """
+
+        self._page_write_executed = 0
+        """ Total number of page actually written by the disk.
+            This is an integer value.
+        """
+
+        self._page_write_failed = 0
+        """ Total number of page unable to be writted due to disk error (no empty pages).
+            This is an integer value.
+        """
+
+        self._host_page_read_request = 0
+        """ Number of page read as requested by the host.
+            This is an integer value.
+        """
+
+        self._page_read_executed = 0
+        """ Total number of page actually read by the disk.
+            This is an integer value.
+        """
+
+        self._block_erase_executed = 0
+        """ Total number of block erase executed.
+            This is an integer value.
+        """
+
+        # INTERNAL STATE
+        self._ftl = dict()
+        """ This is the full state of the flash memory.
+            It's an array of blocks. Every block is an array of page.
+            For every page we keep the status of the page.
+            Furthermore, every block has the following extra information:
+                empty:  total number of empty pages in the given block;
+                dirty:  total number of dirty pages in the given block.
+        """
+
         # set the decimal context
         getcontext().prec = common.DECIMAL_PRECISION
 
