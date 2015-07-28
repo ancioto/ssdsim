@@ -8,8 +8,7 @@ This is the base class to handle a single NAND cell in a very naive and basic im
 
 # IMPORTS
 from decimal import Decimal, getcontext
-
-import simulator.NAND.common as common
+from simulator.NAND.common import PAGE_EMPTY, PAGE_IN_USE, PAGE_DIRTY, DECIMAL_PRECISION, bytes_to_mib, pages_to_mib
 from simulator.NAND.common import get_quantized_decimal as qd, check_block, check_page
 from simulator.NAND.common import get_integer_decimal as qz
 
@@ -122,7 +121,7 @@ class BaseNANDDisk:
         """
 
         # set the decimal context
-        getcontext().prec = common.DECIMAL_PRECISION
+        getcontext().prec = DECIMAL_PRECISION
 
         # initialize the FTL
         for b in range(0, self.total_blocks):
@@ -130,7 +129,7 @@ class BaseNANDDisk:
             self._ftl[b] = dict()
             for p in range(0, self.pages_per_block):
                 # for every page set the empty status
-                self._ftl[b][p] = common.PAGE_EMPTY
+                self._ftl[b][p] = PAGE_EMPTY
 
             # for every block initialize the internal data
             self._ftl[b]['empty'] = self.pages_per_block  # all pages are empty
@@ -154,25 +153,25 @@ class BaseNANDDisk:
                "Time: {} [s]\t IOPS: {}\t Datarate: {} [MiB\s]\n" \
                "Write Amplification: {}\n" \
                "".format(self.pages_per_block, self.total_blocks, self.total_pages, self.page_size,
-                         qd(common.bytes_to_mib(self.total_disk_size)),
+                         qd(bytes_to_mib(self.total_disk_size)),
                          self.number_of_dirty_pages(),
-                         qd(common.pages_to_mib(self.number_of_dirty_pages(), self.page_size)),
+                         qd(pages_to_mib(self.number_of_dirty_pages(), self.page_size)),
                          self.number_of_empty_pages(),
-                         qd(common.pages_to_mib(self.number_of_empty_pages(), self.page_size)),
+                         qd(pages_to_mib(self.number_of_empty_pages(), self.page_size)),
                          self.number_of_in_use_pages(),
-                         qd(common.pages_to_mib(self.number_of_in_use_pages(), self.page_size)),
+                         qd(pages_to_mib(self.number_of_in_use_pages(), self.page_size)),
                          self._host_page_read_request,
-                         qd(common.pages_to_mib(self._host_page_read_request, self.page_size)),
+                         qd(pages_to_mib(self._host_page_read_request, self.page_size)),
                          self._host_page_write_request,
-                         qd(common.pages_to_mib(self._host_page_write_request, self.page_size)),
+                         qd(pages_to_mib(self._host_page_write_request, self.page_size)),
                          self._page_read_executed,
-                         qd(common.pages_to_mib(self._page_read_executed, self.page_size)),
+                         qd(pages_to_mib(self._page_read_executed, self.page_size)),
                          self._page_write_executed,
-                         qd(common.pages_to_mib(self._page_write_executed, self.page_size)),
+                         qd(pages_to_mib(self._page_write_executed, self.page_size)),
                          self._block_erase_executed,
-                         qd(common.bytes_to_mib(self._block_erase_executed * self.block_size)),
+                         qd(bytes_to_mib(self._block_erase_executed * self.block_size)),
                          qd(self.failure_rate()), self._page_write_failed,
-                         qd(common.pages_to_mib(self._page_write_failed, self.page_size)),
+                         qd(pages_to_mib(self._page_write_failed, self.page_size)),
                          qd(self.elapsed_time()), qz(self.IOPS()), qd(self.data_transfer_rate_host()),
                          qd(self.write_amplification()))
 
@@ -239,7 +238,7 @@ class BaseNANDDisk:
         :return:
         """
         # in MiB
-        return common.pages_to_mib((self._host_page_write_request + self._host_page_read_request),
+        return pages_to_mib((self._host_page_write_request + self._host_page_read_request),
                                    self.page_size) / Decimal(self.elapsed_time())
 
     # DISK OPERATIONS UTILITIES
@@ -256,7 +255,7 @@ class BaseNANDDisk:
 
         # get the first empty page available in the provided block
         for p in range(0, self.pages_per_block):
-            if self._ftl[block][p] == common.PAGE_EMPTY:
+            if self._ftl[block][p] == PAGE_EMPTY:
                 return p
 
         # should not be reachable
@@ -290,9 +289,9 @@ class BaseNANDDisk:
         s = self._ftl[block][page]
 
         # if status is EMPTY => WRITE OK
-        if s == common.PAGE_EMPTY:
+        if s == PAGE_EMPTY:
             # change the status of this page
-            self._ftl[block][page] = common.PAGE_IN_USE
+            self._ftl[block][page] = PAGE_IN_USE
 
             # we need to update the statistics
             self._ftl[block]['empty'] -= 1  # we lost one empty page in this block
@@ -303,7 +302,7 @@ class BaseNANDDisk:
         # if status is IN USE => we consider a data change,
         # we use the current disk policy to find a new page to write the new data. In case of success we invalidate
         # the current page, otherwise the operation fails.
-        elif s == common.PAGE_IN_USE:
+        elif s == PAGE_IN_USE:
             # is the block full?
             if self._ftl[block]['empty'] <= 0:
                 # yes, we need a policy to decide how to write
@@ -321,10 +320,10 @@ class BaseNANDDisk:
                 newpage = self.get_empty_page(block=block)
 
                 # change the status of this page
-                self._ftl[block][page] = common.PAGE_DIRTY
+                self._ftl[block][page] = PAGE_DIRTY
 
                 # change the status of the new page
-                self._ftl[block][newpage] = common.PAGE_IN_USE
+                self._ftl[block][newpage] = PAGE_IN_USE
 
                 # we need to update the statistics
                 self._ftl[block]['empty'] -= 1  # we lost one empty page in this block
@@ -349,7 +348,7 @@ class BaseNANDDisk:
         # read the FTL to check the current status
         s = self._ftl[block][page]
 
-        if s == common.PAGE_IN_USE:
+        if s == PAGE_IN_USE:
             # update statistics
             self._elapsed_time += self.read_page_time  # time spent to read the data
             self._page_read_executed += 1  # we executed a read of a page
@@ -369,7 +368,7 @@ class BaseNANDDisk:
         # as we are in a simulation, we directly erase it
         for p in range(0, self.pages_per_block):
             # for every page set the empty status
-            self._ftl[block][p] = common.PAGE_EMPTY
+            self._ftl[block][p] = PAGE_EMPTY
 
         # for every block initialize the internal data
         self._ftl[block]['empty'] = self.pages_per_block  # all pages are empty
