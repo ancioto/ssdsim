@@ -8,7 +8,9 @@ This is the base class to handle a single NAND cell in a very naive and basic im
 
 # IMPORTS
 import simulator.common as common
-from decimal import *
+from simulator.common import get_quantized_decimal as qd
+from simulator.common import get_integer_decimal as qz
+from decimal import Decimal, getcontext
 
 
 # USEFUL DECORATORS
@@ -48,61 +50,61 @@ class BaseNANDDisk:
     This class ...
     """
 
-    # ATTRIBUTES
-    # PHYSICAL CHARACTERISTICS
-    total_blocks = 256
-    """ The total physical number of block available. Usually should be a multiple of 2.
-        This is an integer value. Must be greater than zero.
-    """
-
-    pages_per_block = 64
-    """ The number of pages per single block. Usually should be a multiple of 2.
-        This is an integer value. Must be greater than zero.
-    """
-
-    page_size = 4096
-    """ The physical size of a single page in [KiB]. 1 KiB = 2^20.
-        This is an integer value. Must be greater than zero.
-    """
-
-    total_pages = pages_per_block * total_blocks
-    """ The total physical number of pages available.
-        This is an integer value. Must be greater than zero.
-    """
-
-    block_size = page_size * pages_per_block
-    """ The physical size of a single block in [KiB].
-        It's computed as the number of pages per block times the size of a page.
-        This is an integer value. Must be greater than zero.
-    """
-
-    total_disk_size = block_size * total_blocks
-    """ The total physical size of this NAND cell in [KiB].
-        It's computed as the number of total physical blocks times the size of a block.
-        This is an integer value. Must be greater than zero.
-    """
-
-    write_page_time = 250
-    """ The time to write a single page in [microseconds] (10^-6 seconds).
-        This is an integer value. Must be greater than zero.
-    """
-
-    read_page_time = 25
-    """ The time to read a single page in [microseconds] (10^-6 seconds).
-        This is an integer value. Must be greater than zero.
-    """
-
-    erase_block_time = 1500
-    """ The time to erase a single block in [microseconds] (10^-6 seconds).
-        This is an integer value. Must be greater than zero.
-    """
-
     # CONSTRUCTOR
     def __init__(self):
         """
 
         :return:
         """
+        # ATTRIBUTES
+        # PHYSICAL CHARACTERISTICS
+        self.total_blocks = 256
+        """ The total physical number of block available. Usually should be a multiple of 2.
+            This is an integer value. Must be greater than zero.
+        """
+
+        self.pages_per_block = 64
+        """ The number of pages per single block. Usually should be a multiple of 2.
+            This is an integer value. Must be greater than zero.
+        """
+
+        self.page_size = 4096
+        """ The physical size of a single page in [Bytes].
+            This is an integer value. Must be greater than zero.
+        """
+
+        self.total_pages = self.pages_per_block * self.total_blocks
+        """ The total physical number of pages available.
+            This is an integer value. Must be greater than zero.
+        """
+
+        self.block_size = self.page_size * self.pages_per_block
+        """ The physical size of a single block in [Bytes].
+            It's computed as the number of pages per block times the size of a page.
+            This is an integer value. Must be greater than zero.
+        """
+
+        self.total_disk_size = self.total_pages * self.page_size
+        """ The total physical size of this NAND cell in [Bytes].
+            It's computed as the number of total physical blocks times the size of a block.
+            This is an integer value. Must be greater than zero.
+        """
+
+        self.write_page_time = 250
+        """ The time to write a single page in [microseconds] (10^-6 seconds).
+            This is an integer value. Must be greater than zero.
+        """
+
+        self.read_page_time = 25
+        """ The time to read a single page in [microseconds] (10^-6 seconds).
+            This is an integer value. Must be greater than zero.
+        """
+
+        self.erase_block_time = 1500
+        """ The time to erase a single block in [microseconds] (10^-6 seconds).
+            This is an integer value. Must be greater than zero.
+        """
+
         # INTERNAL STATISTICS
         self._elapsed_time = 0
         """ Keep track of the total elapsed time for the requested operations [microseconds].
@@ -171,7 +173,38 @@ class BaseNANDDisk:
 
         :return:
         """
-        return ""
+        return "{} pages per block, {} blocks, {} pages of {} [Bytes]. Capacity {} [MiB]\n" \
+               "Dirty: {}\{} ([pages]\[MiB])\n" \
+               "Empty: {}\{} ([pages]\[MiB])\n" \
+               "In Use: {}\{} ([pages]\[MiB])\n" \
+               "Host read: {}\{}, write: {}\{} ([pages]\[MiB])\n" \
+               "Disk read: {}\{}, write: {}\{} ([pages]\[MiB])\n" \
+               "Erased blocks: {}\{} ([blocks]\[MiB])\n" \
+               "Failure rate: {} % ({} [pages], {} [MiB])\n" \
+               "Time: {} [s]\t IOPS: {}\t Datarate: {} [MiB\s]\n" \
+               "Write Amplification: {}\n" \
+               "".format(self.pages_per_block, self.total_blocks, self.total_pages, self.page_size,
+                         qd(common.bytes_to_mib(self.total_disk_size)),
+                         self.number_of_dirty_pages(),
+                         qd(common.pages_to_mib(self.number_of_dirty_pages(), self.page_size)),
+                         self.number_of_empty_pages(),
+                         qd(common.pages_to_mib(self.number_of_empty_pages(), self.page_size)),
+                         self.number_of_in_use_pages(),
+                         qd(common.pages_to_mib(self.number_of_in_use_pages(), self.page_size)),
+                         self._host_page_read_request,
+                         qd(common.pages_to_mib(self._host_page_read_request, self.page_size)),
+                         self._host_page_write_request,
+                         qd(common.pages_to_mib(self._host_page_write_request, self.page_size)),
+                         self._page_read_executed,
+                         qd(common.pages_to_mib(self._page_read_executed, self.page_size)),
+                         self._page_write_executed,
+                         qd(common.pages_to_mib(self._page_write_executed, self.page_size)),
+                         self._block_erase_executed,
+                         qd(common.bytes_to_mib(self._block_erase_executed * self.block_size)),
+                         qd(self.failure_rate()), self._page_write_failed,
+                         qd(common.pages_to_mib(self._page_write_failed, self.page_size)),
+                         qd(self.elapsed_time()), qz(self.IOPS()), qd(self.data_transfer_rate_host()),
+                         qd(self.write_amplification()))
 
     # STATISTICAL UTILITIES
     def write_amplification(self):
@@ -201,12 +234,19 @@ class BaseNANDDisk:
             tot += self._ftl[b]['dirty']
         return tot
 
+    def number_of_in_use_pages(self):
+        """
+
+        :return:
+        """
+        return self.total_pages - (self.number_of_empty_pages() + self.number_of_dirty_pages())
+
     def failure_rate(self):
         """
 
         :return:
         """
-        return (Decimal(self._page_write_failed) * 100) / Decimal(self._page_write_executed)
+        return Decimal(self._page_write_failed * 100) / Decimal(self._page_write_executed)
 
     def elapsed_time(self):
         """
@@ -221,7 +261,16 @@ class BaseNANDDisk:
         :return:
         """
         ops = self._page_write_executed + self._page_read_executed
-        return int(ops / self.elapsed_time())
+        return Decimal(ops) / self.elapsed_time()
+
+    def data_transfer_rate_host(self):
+        """
+
+        :return:
+        """
+        # in MiB
+        return common.pages_to_mib((self._host_page_write_request + self._host_page_read_request),
+                                   self.page_size) / Decimal(self.elapsed_time())
 
     # DISK OPERATIONS UTILITIES
     @check_block
