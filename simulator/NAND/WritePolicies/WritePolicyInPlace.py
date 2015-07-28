@@ -8,7 +8,7 @@ the garbage collector is run in place: as soon a block is full the block is modi
 """
 
 # IMPORTS
-from simulator.NAND.WritePolicyInterface import WritePolicyInterface
+from simulator.NAND.WritePolicies.WritePolicyInterface import WritePolicyInterface
 from simulator.NAND.common import check_block, check_page, PAGE_EMPTY, PAGE_DIRTY, PAGE_IN_USE
 
 

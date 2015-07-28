@@ -8,9 +8,9 @@ Generates new NAND with custom Policies and Garbage Collectors
 
 # IMPORTS
 from simulator.NAND.BaseNANDDisk import BaseNANDDisk
-from simulator.NAND.WritePolicyDefault import WritePolicyDefault
-from simulator.NAND.WritePolicyInPlace import WritePolicyInPlace
-from simulator.NAND.WritePolicyInPlaceNoErase import WritePolicyInPlaceNoErase
+from simulator.NAND.WritePolicies.WritePolicyDefault import WritePolicyDefault
+from simulator.NAND.WritePolicies.WritePolicyInPlace import WritePolicyInPlace
+from simulator.NAND.WritePolicies.WritePolicyInPlaceNoErase import WritePolicyInPlaceNoErase
 
 
 # SETTINGS

@@ -8,7 +8,7 @@ just find the first available page in a different block.
 """
 
 # IMPORTS
-from simulator.NAND.WritePolicyInterface import WritePolicyInterface
+from simulator.NAND.WritePolicies.WritePolicyInterface import WritePolicyInterface
 from simulator.NAND.common import check_block, check_page, PAGE_DIRTY, PAGE_IN_USE
 
 

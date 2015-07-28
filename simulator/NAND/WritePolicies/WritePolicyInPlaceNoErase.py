@@ -10,7 +10,7 @@ in a new free block (if available, otherwise the base policy is used). The previ
 """
 
 # IMPORTS
-from simulator.NAND.WritePolicyDefault import WritePolicyDefault
+from simulator.NAND.WritePolicies.WritePolicyDefault import WritePolicyDefault
 from simulator.NAND.common import check_block, check_page, PAGE_EMPTY, PAGE_DIRTY, PAGE_IN_USE
 
 
