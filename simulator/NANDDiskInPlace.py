@@ -51,5 +51,5 @@ class NANDDiskInPlace(BaseNANDDisk):
             if temp_block[p] == common.PAGE_IN_USE:
                 self.raw_write_page(block=block, page=p)
 
-        # if not, try the base naive approach
+        # cannot fail as the substitution is in place
         return True

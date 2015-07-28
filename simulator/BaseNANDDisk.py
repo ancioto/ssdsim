@@ -292,6 +292,20 @@ class BaseNANDDisk:
         # should not be reachable
         raise ValueError("No empty pages available in this block.")
 
+    def get_empty_block(self):
+        """
+
+        :param block:
+        :return:
+        """
+        # get the first empty block available
+        for b in range(0, self.total_blocks):
+            if self._ftl[b]['empty'] == self.pages_per_block:
+                return True, b
+
+        # should not be reachable
+        return False, 0
+
     @check_block
     @check_page
     def full_block_write_policy(self, block=0, page=0):
