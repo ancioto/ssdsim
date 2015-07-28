@@ -18,7 +18,7 @@ from simulator.NAND.NANDFactory import get_instance, WRITEPOLICY_INPLACE, WRITEP
 # initialize a new simulation
 d1 = get_instance()
 d2 = get_instance(garbagecollector=GARBAGECOLLECTOR_SIMPLE)
-d3 = get_instance(WRITEPOLICY_INPLACE)
+d3 = get_instance(WRITEPOLICY_INPLACE, GARBAGECOLLECTOR_SIMPLE)
 d4 = get_instance(WRITEPOLICY_INPLACE_NOERASE, GARBAGECOLLECTOR_SIMPLE)
 
 # write approximately 10 MiB of random data

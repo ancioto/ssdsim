@@ -15,8 +15,6 @@ class WritePolicyInterface(NANDInterface, metaclass=ABCMeta):
     """
     To be written ...
     """
-    # ATTRIBUTES
-
     # METHODS
     @abstractclassmethod
     def get_write_policy_name(self):

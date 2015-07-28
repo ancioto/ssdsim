@@ -15,8 +15,6 @@ class GarbageCollectorInterface(NANDInterface, metaclass=ABCMeta):
     """
     To be written ...
     """
-    # ATTRIBUTES
-
     # METHODS
     @abstractclassmethod
     def check_gc_run(self):

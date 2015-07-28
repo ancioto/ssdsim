@@ -15,8 +15,6 @@ class GarbageCollectorNone(GarbageCollectorInterface):
     """
     To be written ...
     """
-    # ATTRIBUTES
-
     # METHODS
     def get_gc_name(self):
         return "none"

@@ -16,8 +16,6 @@ class WritePolicyInPlace(WritePolicyInterface):
     """
     To be written ...
     """
-    # ATTRIBUTES
-
     # METHODS
     def get_write_policy_name(self):
         return "in place"

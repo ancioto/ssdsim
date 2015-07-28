@@ -147,18 +147,21 @@ class BaseNANDDisk(NANDInterface):
         """
         return "WP: {}\t\tGC: {}\n" \
                "{} pages per block, {} blocks, {} pages of {} [Bytes]. Capacity {} [MiB]\n" \
+               "Max datarate read: {}\t write: {} [MiB\s] (theoretical)\n" \
                "Dirty: {}\{} ([pages]\[MiB])\n" \
                "Empty: {}\{} ([pages]\[MiB])\n" \
                "In Use: {}\{} ([pages]\[MiB])\n" \
                "Host read: {}\{}, write: {}\{} ([pages]\[MiB])\n" \
                "Disk read: {}\{}, write: {}\{} ([pages]\[MiB])\n" \
                "Erased blocks: {}\{} ([blocks]\[MiB])\n" \
-               "Failure rate: {} % ({} [pages], {} [MiB])\n" \
+               "Failures: {} % ({} [pages], {} [MiB])\n" \
                "Time: {} [s]\t IOPS: {}\t Datarate: {} [MiB\s]\n" \
                "Write Amplification: {}\n" \
                "".format(self.get_write_policy_name(), self.get_gc_name(),
                          self.pages_per_block, self.total_blocks, self.total_pages, self.page_size,
                          qd(bytes_to_mib(self.total_disk_size)),
+                         qd(bytes_to_mib(Decimal(1000000 / self.read_page_time)) * self.page_size),
+                         qd(bytes_to_mib(Decimal(1000000 / self.write_page_time)) * self.page_size),
                          self.number_of_dirty_pages(),
                          qd(pages_to_mib(self.number_of_dirty_pages(), self.page_size)),
                          self.number_of_empty_pages(),
@@ -392,9 +395,33 @@ class BaseNANDDisk(NANDInterface):
         :param page:
         :return:
         """
+        # check if we need to run the garbage collector
+        self.run_gc()
+
+        # execute the write
         if self.raw_write_page(block=block, page=page):
             # update statistics
             self._host_page_write_request += 1  # the host actually asked to write a page
+            return True
+
+        return False
+
+    @check_block
+    @check_page
+    def host_read_page(self, block=0, page=0):
+        """
+
+        :param block:
+        :param page:
+        :return:
+        """
+        # check if we need to run the garbage collector
+        self.run_gc()
+
+        # execute the write
+        if self.raw_read_page(block=block, page=page):
+            # update statistics
+            self._host_page_read_request += 1  # the host actually asked to read a page
             return True
 
         return False
