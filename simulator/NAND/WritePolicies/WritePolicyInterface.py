@@ -8,18 +8,16 @@ This is the Abstract class interface for all Write Policy implementations.
 
 # IMPORTS
 from abc import ABCMeta, abstractclassmethod
-from simulator.NAND.common import check_block, check_page
+from simulator.NAND.NANDInterface import NANDInterface
 
 
-class WritePolicyInterface(metaclass=ABCMeta):
+class WritePolicyInterface(NANDInterface, metaclass=ABCMeta):
     """
     To be written ...
     """
     # ATTRIBUTES
 
     # METHODS
-    @check_block
-    @check_page
     @abstractclassmethod
     def full_block_write_policy(self, block=0, page=0):
         """

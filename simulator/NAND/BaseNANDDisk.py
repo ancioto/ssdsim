@@ -8,13 +8,14 @@ This is the base class to handle a single NAND cell in a very naive and basic im
 
 # IMPORTS
 from decimal import Decimal, getcontext
+from simulator.NAND.NANDInterface import NANDInterface
 from simulator.NAND.common import PAGE_EMPTY, PAGE_IN_USE, PAGE_DIRTY, DECIMAL_PRECISION, bytes_to_mib, pages_to_mib
 from simulator.NAND.common import get_quantized_decimal as qd, check_block, check_page
 from simulator.NAND.common import get_integer_decimal as qz
 
 
 # BaseNANDDISK class
-class BaseNANDDisk:
+class BaseNANDDisk(NANDInterface):
     """
     This class ...
     """
@@ -25,6 +26,8 @@ class BaseNANDDisk:
 
         :return:
         """
+        super().__init__()
+
         # ATTRIBUTES
         # PHYSICAL CHARACTERISTICS
         self.total_blocks = 256
@@ -239,7 +242,7 @@ class BaseNANDDisk:
         """
         # in MiB
         return pages_to_mib((self._host_page_write_request + self._host_page_read_request),
-                                   self.page_size) / Decimal(self.elapsed_time())
+                            self.page_size) / Decimal(self.elapsed_time())
 
     # DISK OPERATIONS UTILITIES
     @check_block
@@ -264,7 +267,6 @@ class BaseNANDDisk:
     def get_empty_block(self):
         """
 
-        :param block:
         :return:
         """
         # get the first empty block available

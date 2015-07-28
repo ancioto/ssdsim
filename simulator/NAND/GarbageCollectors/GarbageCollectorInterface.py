@@ -8,10 +8,10 @@ This is the Abstract class interface for all Garbage Collector implementations.
 
 # IMPORTS
 from abc import ABCMeta, abstractclassmethod
-from simulator.NAND.common import check_block
+from simulator.NAND.NANDInterface import NANDInterface
 
 
-class GarbageCollectorInterface(metaclass=ABCMeta):
+class GarbageCollectorInterface(NANDInterface, metaclass=ABCMeta):
     """
     To be written ...
     """
@@ -28,7 +28,6 @@ class GarbageCollectorInterface(metaclass=ABCMeta):
         # TO BE IMPLEMENTED IN REAL CLASS
         return NotImplemented
 
-    @check_block
     @abstractclassmethod
     def check_gc_block(self, block=0):
         """
@@ -39,7 +38,6 @@ class GarbageCollectorInterface(metaclass=ABCMeta):
         # TO BE IMPLEMENTED IN REAL CLASS
         return NotImplemented
 
-    @check_block
     @abstractclassmethod
     def execute_gc_block(self, block=0):
         """
@@ -53,7 +51,6 @@ class GarbageCollectorInterface(metaclass=ABCMeta):
     def run_gc(self):
         """
 
-        :param block:
         :return:
         """
         # check the overall conditions to execute the gc
