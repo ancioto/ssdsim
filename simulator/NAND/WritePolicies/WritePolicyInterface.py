@@ -3,8 +3,7 @@
 # see README.txt or LICENSE.txt for details
 
 """
-This is an improved policy for writes in case the block is full:
-the garbage collector is run in place: as soon a block is full the block is modified in-memory and erased.
+This is the Abstract class interface for all Write Policy implementations.
 """
 
 # IMPORTS
@@ -12,7 +11,6 @@ from abc import ABCMeta, abstractclassmethod
 from simulator.NAND.common import check_block, check_page
 
 
-# WritePolicyInPlace
 class WritePolicyInterface(metaclass=ABCMeta):
     """
     To be written ...
@@ -30,4 +28,4 @@ class WritePolicyInterface(metaclass=ABCMeta):
         :return:
         """
         # TO BE IMPLEMENTED IN REAL CLASS
-        return False
+        return NotImplemented

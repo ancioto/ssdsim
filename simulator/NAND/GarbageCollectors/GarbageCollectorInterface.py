@@ -1,0 +1,75 @@
+# This file is part of the WAF-Simulator by Nicholas Fiorentini (2015)
+# and is released under Creative Common Attribution 4.0 International (CC BY 4.0)
+# see README.txt or LICENSE.txt for details
+
+"""
+This is the Abstract class interface for all Garbage Collector implementations.
+"""
+
+# IMPORTS
+from abc import ABCMeta, abstractclassmethod
+from simulator.NAND.common import check_block
+
+
+class GarbageCollectorInterface(metaclass=ABCMeta):
+    """
+    To be written ...
+    """
+    # ATTRIBUTES
+
+    # METHODS
+    @abstractclassmethod
+    def check_gc_run(self):
+        """
+
+        :param block:
+        :return:
+        """
+        # TO BE IMPLEMENTED IN REAL CLASS
+        return NotImplemented
+
+    @check_block
+    @abstractclassmethod
+    def check_gc_block(self, block=0):
+        """
+
+        :param block:
+        :return:
+        """
+        # TO BE IMPLEMENTED IN REAL CLASS
+        return NotImplemented
+
+    @check_block
+    @abstractclassmethod
+    def execute_gc_block(self, block=0):
+        """
+
+        :param block:
+        :return:
+        """
+        # TO BE IMPLEMENTED IN REAL CLASS
+        return NotImplemented
+
+    def run_gc(self):
+        """
+
+        :param block:
+        :return:
+        """
+        # check the overall conditions to execute the gc
+        if self.check_gc_run():
+            # run the gc on every block
+            execution = False
+            for b in range(0, self.total_blocks):
+                # check the conditions on this block
+                if self.check_gc_block(block=b):
+                    # ok, run it
+                    res = self.execute_gc_block(block=b)
+                    if not execution and res:
+                        # ok, the gc was executed on at least one block
+                        execution = True
+
+            return execution
+
+        # gc not executed
+        return False
