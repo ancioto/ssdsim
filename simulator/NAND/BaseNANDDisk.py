@@ -265,6 +265,15 @@ class BaseNANDDisk(NANDInterface):
         return pages_to_mib((self._host_page_write_request + self._host_page_read_request),
                             self.page_size) / Decimal(self.elapsed_time())
 
+    def get_stats(self):
+        """
+
+        :return:
+        """
+        return self._elapsed_time, qz(self.IOPS()), qd(self.data_transfer_rate_host()), qd(self.write_amplification()),\
+            self._host_page_write_request, self._host_page_read_request, self._page_write_executed,\
+            self._page_read_executed, self._block_erase_executed, self._page_write_failed
+
     # DISK OPERATIONS UTILITIES
     @check_block
     def get_empty_page(self, block=0):

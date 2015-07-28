@@ -12,6 +12,7 @@ from decimal import Decimal, getcontext
 from colorama import init, Fore, Style
 from pathlib import Path
 from scipy.stats import randint
+import numpy as np
 from simulator.NAND.common import DECIMAL_PRECISION
 from simulator.NAND.common import get_quantized_decimal as qd
 
@@ -66,6 +67,12 @@ class Simulation(object):
         """ The created disks to be executed
         """
 
+        self._stats = dict()
+        """ Store the statistics for each disk. Each disk has a dictionary of variables (es: iops, time, page written).
+            Then every variable has a numpy array of the extracted data.
+            A special 'samples' column stores the number of written data
+        """
+
     def init_simulation(self, base_path=None):
         """
 
@@ -114,6 +121,47 @@ class Simulation(object):
         :return:
         """
         self._disks[name] = disk
+        self._stats[name] = {'samples': 1,  # integer (starts from 1 as there is the first empty row)
+                             'time': np.array([0]),  # microseconds
+                             'iops': np.array([0]),
+                             'datarate': np.array([0]),  # MiB/s
+                             'amplification': np.array([0]),
+                             'host_write': np.array([0]),  # pages
+                             'host_read': np.array([0]),  # pages
+                             'disk_write': np.array([0]),  # pages
+                             'disk_read': np.array([0]),  # pages
+                             'block_erased': np.array([0]),  # blocks
+                             'failures': np.array([0])}  # pages
+
+    @check_init
+    def output_stats(self):
+        """
+
+        :return:
+        """
+        # every disk has its own stats
+        for d in self._disks:
+            # create the file path
+            fp = self.sim_path.joinpath("stats_{}.csv".format(d))
+
+            # disk information
+            with fp.open('wt') as f:
+                # first line
+                f.write("time,iops,datarate,amplification,host_write,host_read,disk_write,disk_read,block_erased,"
+                        "failures\n")
+
+                # data
+                for i in range(0, self._stats[d]['samples']):
+                    # columns
+                    for s in ('time', 'iops', 'datarate', 'amplification', 'host_write', 'host_read', 'disk_write',
+                              'disk_read', 'failures'):
+                        f.write("{},".format(self._stats[d][s][i]))
+
+                    # last column
+                    f.write('{}\n'.format(self._stats[d]['failures'][i]))
+
+            # status
+            print("Updated file '{}'".format(fp))
 
     @check_init
     def output_disks(self, extra=""):
@@ -133,6 +181,37 @@ class Simulation(object):
         print("Updated file '{}'".format(fp))
 
     @check_init
+    def execute_one_simulation_step(self, step_sample):
+        """
+
+        :return:
+        """
+        # write of a single page in a block
+        for d in self._disks:
+            self._disks[d].host_write_page(block=step_sample[0], page=step_sample[1])
+
+    @check_init
+    def extract_and_store_stats(self):
+        """
+
+        :return:
+        """
+        # for every disk read the data and store it in internal array for further SciPy manipulation
+        for d in self._disks:
+            stats = self._disks[d].get_stats()
+            self._stats[d]['samples'] += 1
+            self._stats[d]['time'] = np.append(self._stats[d]['time'], [stats[0]])
+            self._stats[d]['iops'] = np.append(self._stats[d]['iops'], [stats[1]])
+            self._stats[d]['datarate'] = np.append(self._stats[d]['datarate'], [stats[2]])
+            self._stats[d]['amplification'] = np.append(self._stats[d]['amplification'], [stats[3]])
+            self._stats[d]['host_write'] = np.append(self._stats[d]['host_write'], [stats[4]])
+            self._stats[d]['host_read'] = np.append(self._stats[d]['host_read'], [stats[5]])
+            self._stats[d]['disk_write'] = np.append(self._stats[d]['disk_write'], [stats[6]])
+            self._stats[d]['disk_read'] = np.append(self._stats[d]['disk_read'], [stats[7]])
+            self._stats[d]['block_erased'] = np.append(self._stats[d]['block_erased'], [stats[8]])
+            self._stats[d]['failures'] = np.append(self._stats[d]['failures'], [stats[9]])
+
+    @check_init
     def run(self):
         """
 
@@ -147,7 +226,7 @@ class Simulation(object):
         print("Sample data generation ... ", end="")
 
         sample_size = 1000
-        quantum_progress = int((5 * sample_size) / 100)
+        sampling_data = 100
         blocks = randint.rvs(0, 256, size=sample_size)
         pages = randint.rvs(0, 64, size=sample_size)
 
@@ -155,6 +234,8 @@ class Simulation(object):
         print(Style.RESET_ALL, end="")
 
         # run the simulation and gather statistics
+        quantum_progress = int((5 * sample_size) / 100)  # for the progress indicator
+
         print("RUNNING ... ", end="", flush=True)
         start_time = datetime.now()
         for i in range(0, sample_size):
@@ -166,10 +247,17 @@ class Simulation(object):
                       end="", flush=True)
 
             # execution
-            for d in self._disks:
-                self._disks[d].host_write_page(block=blocks[i], page=pages[i])
+            self.execute_one_simulation_step((blocks[i], pages[i]))
 
+            # extract statistics
+            if i > 0 and i % sampling_data == 0:
+                self.extract_and_store_stats()
+
+        # compute the total execution time
         final_elapsed_time = datetime.now() - start_time
+
+        # extract final statistics
+        self.extract_and_store_stats()
 
         print('\rRUNNING ... ', end="", flush=True)
         print(Fore.GREEN + "DONE", flush=True)
@@ -179,3 +267,6 @@ class Simulation(object):
 
         # output the end disks information
         self.output_disks("_results")
+
+        # output the stats
+        self.output_stats()
