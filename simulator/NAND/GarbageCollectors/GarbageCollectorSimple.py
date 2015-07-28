@@ -22,13 +22,13 @@ class GarbageCollectorSimple(GarbageCollectorInterface):
 
         # ATTRIBUTES
         # PARAMETERS
-        self.gc_param_mintime = 1000  # = 1 millisecond
+        self.gc_param_mintime = 500  # = 0.5 millisecond (every two writes)
         """ Minimum time to wait before another run of the garbage collector.
             It's in microseconds (10^-6). Is an integer value. Must be greater or equal zero.
             If this value is zero then the gc is always executed.
         """
 
-        self.gc_param_dirtness = Decimal('0.5')  # 50 %
+        self.gc_param_dirtness = Decimal('0.3')  # 30 %
         """ Minimum percentage of dirty pages in a block to execute the garbage collector.
             It's a Decimal value and must be greater than 0 and maximum equal to 1.
             If it's equal to 1 then a block is cleaned only if all pages are dirty.

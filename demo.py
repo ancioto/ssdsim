@@ -26,15 +26,23 @@ sample = 50000
 b = randint.rvs(0, d1.total_blocks, size=sample)
 p = randint.rvs(0, d1.pages_per_block, size=sample)
 
+print('Running: ', end="", flush=True)
 for i in range(0, sample):
+    # progress
+    if i % 1000 == 0:
+        print('.', end="", flush=True)
+
+    # execution
     d1.host_write_page(block=b[i], page=p[i])
     d2.host_write_page(block=b[i], page=p[i])
     d3.host_write_page(block=b[i], page=p[i])
     d4.host_write_page(block=b[i], page=p[i])
 
-    if i in (1000, 10000, 25000):
-        # check
-        print("------- {}\n{}\n{}\n{}\n{}\n".format(i, d1, d2, d3, d4))
+    # statistics
+    #if i in (1000, 10000, 25000):
+    #    # check
+    #    print("------- {}\n{}\n{}\n{}\n{}\n".format(i, d1, d2, d3, d4), flush=True)
+print(' DONE\n', end="", flush=True)
 
 # check
 print("\n\n#### FINAL #####\n\n{}\n{}\n{}\n{}\n".format(d1, d2, d3, d4))
