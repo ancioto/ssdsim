@@ -11,35 +11,56 @@ from simulator.NAND.BaseNANDDisk import BaseNANDDisk
 from simulator.NAND.WritePolicies.WritePolicyDefault import WritePolicyDefault
 from simulator.NAND.WritePolicies.WritePolicyInPlace import WritePolicyInPlace
 from simulator.NAND.WritePolicies.WritePolicyInPlaceNoErase import WritePolicyInPlaceNoErase
-
+from simulator.NAND.GarbageCollectors.GarbageCollectorNone import GarbageCollectorNone
+from simulator.NAND.GarbageCollectors.GarbageCollectorSimple import GarbageCollectorSimple
 
 # SETTINGS
+# WRITE POLICY
 WRITEPOLICY_DEFAULT = 'WP_DEFAULT'
 WRITEPOLICY_INPLACE = 'WP_IP'
 WRITEPOLICY_INPLACE_NOERASE = 'WP_IP_NE'
 
+# GARBAGE COLLECTOR
+GARBAGECOLLECTOR_NONE = 'GC_NONE'
+GARBAGECOLLECTOR_SIMPLE = 'GC_SIMPLE'
+
 
 # FUNCTIONS
-def get_class(writepolicy=WRITEPOLICY_DEFAULT):
+def get_class(writepolicy=WRITEPOLICY_DEFAULT, garbagecollector=GARBAGECOLLECTOR_NONE):
     """
 
     :param writepolicy:
     :return:
     """
-    if writepolicy == WRITEPOLICY_DEFAULT:
-        return type("", (BaseNANDDisk, WritePolicyDefault), {})
-    elif writepolicy == WRITEPOLICY_INPLACE:
-        return type("NANDWPIP", (BaseNANDDisk, WritePolicyInPlace), {})
+    classname = "NANDDisk"
+    wp = WritePolicyDefault
+    gc = GarbageCollectorNone
+
+    # GET THE WRITE POLICY
+    if writepolicy == WRITEPOLICY_INPLACE:
+        wp = WritePolicyInPlace
+        classname += "WPIP"
     elif writepolicy == WRITEPOLICY_INPLACE_NOERASE:
-        return type("NANDWPIPNE", (BaseNANDDisk, WritePolicyInPlaceNoErase), {})
-    else:
+        wp = WritePolicyInPlaceNoErase
+        classname += "WPIPNE"
+    elif writepolicy != WRITEPOLICY_DEFAULT:
         raise ValueError("Invalid write policy")
 
+    # GET THE GARBAGE COLLECTOR
+    if garbagecollector == GARBAGECOLLECTOR_SIMPLE:
+        gc = GarbageCollectorSimple
+        classname += "GCS"
+    elif garbagecollector != GARBAGECOLLECTOR_NONE:
+        raise ValueError("Invalid garbage collector")
 
-def get_instance(writepolicy=WRITEPOLICY_DEFAULT):
+    # ASSEMBLE THE CLASS
+    return type(classname, (BaseNANDDisk, wp, gc), {})
+
+
+def get_instance(writepolicy=WRITEPOLICY_DEFAULT, garbagecollector=GARBAGECOLLECTOR_NONE):
     """
 
     :param writepolicy:
     :return:
     """
-    return get_class(writepolicy)()  # the second parenthesis is the class constructor
+    return get_class(writepolicy, garbagecollector)()  # the second parenthesis is the class constructor
