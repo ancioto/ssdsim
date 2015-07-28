@@ -189,6 +189,10 @@ class BaseNANDDisk(NANDInterface):
 
         :return:
         """
+        # avoid divide by zero errors
+        if self._host_page_write_request <= 0:
+            return Decimal('0')
+
         return Decimal(self._page_write_executed) / Decimal(self._host_page_write_request)
 
     def number_of_empty_pages(self):
@@ -223,6 +227,10 @@ class BaseNANDDisk(NANDInterface):
 
         :return:
         """
+        # avoid divide by zero errors
+        if self._page_write_executed <= 0:
+            return Decimal('0')
+
         return Decimal(self._page_write_failed * 100) / Decimal(self._page_write_executed)
 
     def elapsed_time(self):
@@ -237,6 +245,10 @@ class BaseNANDDisk(NANDInterface):
 
         :return:
         """
+        # avoid divide by zero errors
+        if self._elapsed_time <= 0:
+            return Decimal('0')
+
         ops = self._page_write_executed + self._page_read_executed
         return Decimal(ops) / self.elapsed_time()
 
@@ -245,6 +257,10 @@ class BaseNANDDisk(NANDInterface):
 
         :return:
         """
+        # avoid divide by zero errors
+        if self._elapsed_time <= 0:
+            return Decimal('0')
+
         # in MiB
         return pages_to_mib((self._host_page_write_request + self._host_page_read_request),
                             self.page_size) / Decimal(self.elapsed_time())

@@ -8,41 +8,30 @@
 This is a demo just to play with the simulation library.
 """
 
-# TODO: this file will be migrated.
-
 # IMPORTS
-from scipy.stats import randint
+from simulator.Simulation import Simulation
 from simulator.NAND.NANDFactory import get_instance, WRITEPOLICY_INPLACE, WRITEPOLICY_INPLACE_NOERASE, \
     GARBAGECOLLECTOR_SIMPLE
 
-# initialize a new simulation
-d1 = get_instance()
-d2 = get_instance(garbagecollector=GARBAGECOLLECTOR_SIMPLE)
-d3 = get_instance(WRITEPOLICY_INPLACE, GARBAGECOLLECTOR_SIMPLE)
-d4 = get_instance(WRITEPOLICY_INPLACE_NOERASE, GARBAGECOLLECTOR_SIMPLE)
 
-# write approximately 10 MiB of random data
-sample = 50000
-b = randint.rvs(0, d1.total_blocks, size=sample)
-p = randint.rvs(0, d1.pages_per_block, size=sample)
+def main():
+    # create the simulation
+    demo = Simulation(simulation_name="demo")
+    demo.init_simulation(base_path="../OUT/")
 
-print('Running: ', end="", flush=True)
-for i in range(0, sample):
-    # progress
-    if i % 1000 == 0:
-        print('.', end="", flush=True)
+    # create the disks and attach to the simulation
+    demo.add_disk("base", get_instance())
+    demo.add_disk("basegc", get_instance(garbagecollector=GARBAGECOLLECTOR_SIMPLE))
+    demo.add_disk("wpgc", get_instance(WRITEPOLICY_INPLACE, GARBAGECOLLECTOR_SIMPLE))
+    demo.add_disk("wpnegc", get_instance(WRITEPOLICY_INPLACE_NOERASE, GARBAGECOLLECTOR_SIMPLE))
 
-    # execution
-    d1.host_write_page(block=b[i], page=p[i])
-    d2.host_write_page(block=b[i], page=p[i])
-    d3.host_write_page(block=b[i], page=p[i])
-    d4.host_write_page(block=b[i], page=p[i])
+    # run the simulation
+    demo.run()
 
-    # statistics
-    #if i in (1000, 10000, 25000):
-    #    # check
-    #    print("------- {}\n{}\n{}\n{}\n{}\n".format(i, d1, d2, d3, d4), flush=True)
-print(' DONE\n', end="", flush=True)
+#
+# MAIN ENTRY POINT
+#
+if __name__ == "__main__":
+    # execute only if run as a script
+    main()
 
-# check
-print("\n\n#### FINAL #####\n\n{}\n{}\n{}\n{}\n".format(d1, d2, d3, d4))
