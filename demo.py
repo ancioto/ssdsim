@@ -20,7 +20,7 @@ d1 = BaseNANDDisk()
 d2 = NANDDiskInPlace()
 
 # write approximately 10 MiB of random data
-sample = 20000
+sample = 50000
 b = randint.rvs(0, d1.total_blocks, size=sample)
 p = randint.rvs(0, d1.pages_per_block, size=sample)
 
@@ -28,5 +28,9 @@ for i in range(0, sample):
     d1.host_write_page(block=b[i], page=p[i])
     d2.host_write_page(block=b[i], page=p[i])
 
+    if i in (1000, 10000, 25000):
+        # check
+        print("------- {}\nBaseNANDDisk:\n{}\nNANDDiskInPlace:\n{}".format(i, d1, d2))
+
 # check
-print("BaseNANDDisk:\n{}\n\nNANDDiskInPlace:\n{}".format(d1, d2))
+print("\n\n#### FINAL #####\n\nBaseNANDDisk:\n{}\n\nNANDDiskInPlace:\n{}".format(d1, d2))
