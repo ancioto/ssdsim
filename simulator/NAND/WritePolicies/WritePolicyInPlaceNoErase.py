@@ -21,6 +21,9 @@ class WritePolicyInPlaceNoErase(WritePolicyDefault):
     # ATTRIBUTES
 
     # METHODS
+    def get_write_policy_name(self):
+        return "in place with no erase"
+
     @check_block
     @check_page
     def full_block_write_policy(self, block=0, page=0):

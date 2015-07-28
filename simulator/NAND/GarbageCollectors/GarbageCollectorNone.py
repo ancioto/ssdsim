@@ -18,6 +18,9 @@ class GarbageCollectorNone(GarbageCollectorInterface):
     # ATTRIBUTES
 
     # METHODS
+    def get_gc_name(self):
+        return "none"
+
     def check_gc_run(self):
         """
 

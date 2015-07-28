@@ -19,11 +19,9 @@ class WritePolicyInterface(NANDInterface, metaclass=ABCMeta):
 
     # METHODS
     @abstractclassmethod
-    def full_block_write_policy(self, block=0, page=0):
-        """
+    def get_write_policy_name(self):
+        return NotImplemented
 
-        :param block:
-        :return:
-        """
-        # TO BE IMPLEMENTED IN REAL CLASS
+    @abstractclassmethod
+    def full_block_write_policy(self, block=0, page=0):
         return NotImplemented

@@ -145,7 +145,8 @@ class BaseNANDDisk(NANDInterface):
 
         :return:
         """
-        return "{} pages per block, {} blocks, {} pages of {} [Bytes]. Capacity {} [MiB]\n" \
+        return "WP: {}\t\tGC: {}\n" \
+               "{} pages per block, {} blocks, {} pages of {} [Bytes]. Capacity {} [MiB]\n" \
                "Dirty: {}\{} ([pages]\[MiB])\n" \
                "Empty: {}\{} ([pages]\[MiB])\n" \
                "In Use: {}\{} ([pages]\[MiB])\n" \
@@ -155,7 +156,8 @@ class BaseNANDDisk(NANDInterface):
                "Failure rate: {} % ({} [pages], {} [MiB])\n" \
                "Time: {} [s]\t IOPS: {}\t Datarate: {} [MiB\s]\n" \
                "Write Amplification: {}\n" \
-               "".format(self.pages_per_block, self.total_blocks, self.total_pages, self.page_size,
+               "".format(self.get_write_policy_name(), self.get_gc_name(),
+                         self.pages_per_block, self.total_blocks, self.total_pages, self.page_size,
                          qd(bytes_to_mib(self.total_disk_size)),
                          self.number_of_dirty_pages(),
                          qd(pages_to_mib(self.number_of_dirty_pages(), self.page_size)),

@@ -20,32 +20,18 @@ class GarbageCollectorInterface(NANDInterface, metaclass=ABCMeta):
     # METHODS
     @abstractclassmethod
     def check_gc_run(self):
-        """
-
-        :param block:
-        :return:
-        """
-        # TO BE IMPLEMENTED IN REAL CLASS
         return NotImplemented
 
     @abstractclassmethod
     def check_gc_block(self, block=0):
-        """
-
-        :param block:
-        :return:
-        """
-        # TO BE IMPLEMENTED IN REAL CLASS
         return NotImplemented
 
     @abstractclassmethod
     def execute_gc_block(self, block=0):
-        """
+        return NotImplemented
 
-        :param block:
-        :return:
-        """
-        # TO BE IMPLEMENTED IN REAL CLASS
+    @abstractclassmethod
+    def get_gc_name(self):
         return NotImplemented
 
     def run_gc(self):

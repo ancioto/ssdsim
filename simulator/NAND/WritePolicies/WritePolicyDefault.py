@@ -19,6 +19,9 @@ class WritePolicyDefault(WritePolicyInterface):
     # ATTRIBUTES
 
     # METHODS
+    def get_write_policy_name(self):
+        return "default"
+
     @check_block
     @check_page
     def full_block_write_policy(self, block=0, page=0):
