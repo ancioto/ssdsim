@@ -3,19 +3,18 @@
 # see README.txt or LICENSE.txt for details
 
 """
-This is an improved NAND cell based on BaseNANDDisk with a different policy for writes:
+This is an improved policy for writes in case the block is full:
 the garbage collector is run in place: as soon a block is full the block is modified in-memory and written
 in a new free block (if available, otherwise the base policy is used). The previous block is left dirty or empty
 (a gc will clean it).
 """
 
 # IMPORTS
-from simulator.BaseNANDDisk import BaseNANDDisk, check_block, check_page
-from simulator import common
+from simulator.NAND.WritePolicyDefault import WritePolicyDefault
+from simulator.NAND.common import check_block, check_page, PAGE_EMPTY, PAGE_DIRTY, PAGE_IN_USE
 
 
-# NANDDiskInPlace
-class NANDDiskInPlaceNoErase(BaseNANDDisk):
+class WritePolicyInPlaceNoErase(WritePolicyDefault):
     """
     To be written ...
     """
@@ -35,7 +34,7 @@ class NANDDiskInPlaceNoErase(BaseNANDDisk):
 
         if res:
             # change the status of the original page, so we don't need to read it
-            self._ftl[block][page] = common.PAGE_DIRTY
+            self._ftl[block][page] = PAGE_DIRTY
 
             # STEP 1: temporary copy the block data (this also simulates the in-memory change)
             #         this is a read and only useful data are read
@@ -44,18 +43,18 @@ class NANDDiskInPlaceNoErase(BaseNANDDisk):
             for p in range(0, self.pages_per_block):
                 # READ and change the status of the original page
                 if self.raw_read_page(block=block, page=p):
-                    temp_block[p] = common.PAGE_IN_USE  # the page is valid and in use
-                    self._ftl[block][p] = common.PAGE_DIRTY  # set the original page as dirty
+                    temp_block[p] = PAGE_IN_USE  # the page is valid and in use
+                    self._ftl[block][p] = PAGE_DIRTY  # set the original page as dirty
                     self._ftl[block]['dirty'] += 1  # new dirty page
                 else:
-                    temp_block[p] = common.PAGE_EMPTY  # reset the page, even if is dirty, for the copy
+                    temp_block[p] = PAGE_EMPTY  # reset the page, even if is dirty, for the copy
 
             # in-memory change
-            temp_block[page] = common.PAGE_IN_USE
+            temp_block[page] = PAGE_IN_USE
 
             # STEP 2: write the IN USE pages only in the new block
             for p in range(0, self.pages_per_block):
-                if temp_block[p] == common.PAGE_IN_USE:
+                if temp_block[p] == PAGE_IN_USE:
                     self.raw_write_page(block=newblock, page=p)
 
             return True

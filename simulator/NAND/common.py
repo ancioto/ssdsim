@@ -64,3 +64,34 @@ def get_integer_decimal(dec=0):
     :return: a Decimal quantized to zero decimal places.
     """
     return Decimal(dec).quantize(NOPLACES)
+
+
+# USEFUL DECORATORS
+def check_block(f):
+    """
+    A wrapper to validate the block parameter for a BaseNANDDisk class.
+    """
+    def wrapper(s, **kwargs):
+        if 'block' in kwargs:
+            block = kwargs['block']
+            if block < 0 or block >= s.total_blocks:
+                raise ValueError("block parameter out of range.")
+
+        # seems fine, let's proceed
+        return f(s, **kwargs)
+    return wrapper
+
+
+def check_page(f):
+    """
+    A wrapper to validate the page parameter for a BaseNANDDisk class.
+    """
+    def wrapper(s, **kwargs):
+        if 'page' in kwargs:
+            page = kwargs['page']
+            if page < 0 or page >= s.pages_per_block:
+                raise ValueError("page parameter out of range.")
+
+        # seems fine, let's proceed
+        return f(s, **kwargs)
+    return wrapper

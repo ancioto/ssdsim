@@ -7,41 +7,11 @@ This is the base class to handle a single NAND cell in a very naive and basic im
 """
 
 # IMPORTS
-import simulator.common as common
-from simulator.common import get_quantized_decimal as qd
-from simulator.common import get_integer_decimal as qz
 from decimal import Decimal, getcontext
 
-
-# USEFUL DECORATORS
-def check_block(f):
-    """
-    A wrapper to validate the block parameter for a BaseNANDDisk class.
-    """
-    def wrapper(s, **kwargs):
-        if 'block' in kwargs:
-            block = kwargs['block']
-            if block < 0 or block >= s.total_blocks:
-                raise ValueError("block parameter out of range.")
-
-        # seems fine, let's proceed
-        return f(s, **kwargs)
-    return wrapper
-
-
-def check_page(f):
-    """
-    A wrapper to validate the page parameter for a BaseNANDDisk class.
-    """
-    def wrapper(s, **kwargs):
-        if 'page' in kwargs:
-            page = kwargs['page']
-            if page < 0 or page >= s.pages_per_block:
-                raise ValueError("page parameter out of range.")
-
-        # seems fine, let's proceed
-        return f(s, **kwargs)
-    return wrapper
+import simulator.NAND.common as common
+from simulator.NAND.common import get_quantized_decimal as qd, check_block, check_page
+from simulator.NAND.common import get_integer_decimal as qz
 
 
 # BaseNANDDISK class
@@ -305,36 +275,6 @@ class BaseNANDDisk:
 
         # should not be reachable
         return False, 0
-
-    @check_block
-    @check_page
-    def full_block_write_policy(self, block=0, page=0):
-        """
-
-        :param block:
-        :return:
-        """
-        # naive policy: just find the first available page in a different block
-        for b in range(0, self.total_blocks):
-            if b != block and self._ftl[b]['empty'] > 0:
-                # FOUND a block with empty pages
-                p = self.get_empty_page(block=b)
-
-                # change the status of the original page
-                self._ftl[block][page] = common.PAGE_DIRTY
-
-                # change the status of the new page
-                self._ftl[b][p] = common.PAGE_IN_USE
-
-                # we need to update the statistics
-                self._ftl[block]['dirty'] += 1  # we have one more dirty page in this block
-                self._ftl[b]['empty'] -= 1  # we lost one empty page in this block
-                self._elapsed_time += self.write_page_time  # time spent to write the data
-                self._page_write_executed += 1  # one page written
-                return True
-
-        # no empty page found
-        return False
 
     # RAW DISK OPERATIONS
     @check_block

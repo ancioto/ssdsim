@@ -11,15 +11,13 @@ This is a demo just to play with the simulation library.
 # TODO: this file will be migrated.
 
 # IMPORTS
-from simulator.BaseNANDDisk import BaseNANDDisk
-from simulator.NANDDiskInPlace import NANDDiskInPlace
-from simulator.NANDDiskInPlaceNoErase import NANDDiskInPlaceNoErase
 from scipy.stats import randint
+from simulator.NAND.NANDFactory import get_instance, WRITEPOLICY_INPLACE, WRITEPOLICY_INPLACE_NOERASE
 
 # initialize a new simulation
-d1 = BaseNANDDisk()
-d2 = NANDDiskInPlace()
-d3 = NANDDiskInPlaceNoErase()
+d1 = get_instance()
+d2 = get_instance(WRITEPOLICY_INPLACE)
+d3 = get_instance(WRITEPOLICY_INPLACE_NOERASE)
 
 # write approximately 10 MiB of random data
 sample = 50000
