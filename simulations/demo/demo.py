@@ -20,7 +20,7 @@ def main():
     demo = Simulation(simulation_name="demo",
                       sample_size=5000, sampling=1000,
                       sampling_type=SIM_SAMPLING_HOST_WRITE)
-    demo.init_simulation(base_path="../OUT/")
+    demo.init_simulation(base_path="./simulations/RESULTS/")
 
     # create the disks and attach to the simulation
     demo.add_disk("base", get_instance())

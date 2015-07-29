@@ -17,7 +17,7 @@ import numpy as np
 def main():
     # read the simulation data
     data = dict()
-    base_path = Path("../OUT/demo/")
+    base_path = Path("./simulations/RESULTS/demo/")
     for d in ("base", "basegc", "wpgc", "wpnegc"):
         fp = base_path.joinpath("raw_data_{}.csv".format(d))
         data[d] = dict()
