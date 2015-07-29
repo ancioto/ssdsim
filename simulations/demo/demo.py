@@ -6,18 +6,20 @@
 
 """
 This is a demo just to play with the simulation library.
+This script just run the simulation. Then the analysis.py executes the fancy stats.
 """
 
 # IMPORTS
-import matplotlib.pyplot as plt
-from simulator.Simulation import Simulation
+from simulator.Simulation import Simulation, SIM_SAMPLING_HOST_WRITE, SIM_SAMPLING_ELAPSED_TIME
 from simulator.NAND.NANDFactory import get_instance, WRITEPOLICY_INPLACE, WRITEPOLICY_INPLACE_NOERASE, \
     GARBAGECOLLECTOR_SIMPLE
 
 
 def main():
     # create the simulation
-    demo = Simulation(simulation_name="demo")
+    demo = Simulation(simulation_name="demo",
+                      sample_size=5000, sampling=1000,
+                      sampling_type=SIM_SAMPLING_HOST_WRITE)
     demo.init_simulation(base_path="../OUT/")
 
     # create the disks and attach to the simulation
@@ -28,16 +30,6 @@ def main():
 
     # run the simulation
     demo.run()
-
-    # now plot some results
-
-    # amplification factor over time
-    plt.plot(demo.sample_index, demo.stats["base"]['amplification'], 'k-',
-             demo.sample_index, demo.stats["basegc"]['amplification'], 'r-',
-             demo.sample_index, demo.stats["wpgc"]['amplification'], 'g-',
-             demo.sample_index, demo.stats["wpnegc"]['amplification'], 'b-')
-    plt.show()
-    #plt.savefig(fname=)
 
 #
 # MAIN ENTRY POINT

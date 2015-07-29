@@ -63,6 +63,10 @@ class NANDInterface(metaclass=ABCMeta):
         return NotImplemented
 
     @abstractclassmethod
+    def elapsed_time_seconds(self):
+        return NotImplemented
+
+    @abstractclassmethod
     def IOPS(self):
         return NotImplemented
 

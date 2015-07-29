@@ -180,7 +180,7 @@ class BaseNANDDisk(NANDInterface):
                          qd(bytes_to_mib(self._block_erase_executed * self.block_size)),
                          qd(self.failure_rate()), self._page_write_failed,
                          qd(pages_to_mib(self._page_write_failed, self.page_size)),
-                         qd(self.elapsed_time()), qz(self.IOPS()), qd(self.data_transfer_rate_host()),
+                         qd(self.elapsed_time_seconds()), qz(self.IOPS()), qd(self.data_transfer_rate_host()),
                          qd(self.write_amplification()))
 
     # STATISTICAL UTILITIES
@@ -238,6 +238,13 @@ class BaseNANDDisk(NANDInterface):
 
         :return:
         """
+        return self._elapsed_time
+
+    def elapsed_time_seconds(self):
+        """
+
+        :return:
+        """
         return Decimal(self._elapsed_time) / Decimal(1000000)
 
     def IOPS(self):
@@ -250,7 +257,7 @@ class BaseNANDDisk(NANDInterface):
             return Decimal('0')
 
         ops = self._page_write_executed + self._page_read_executed
-        return Decimal(ops) / self.elapsed_time()
+        return Decimal(ops) / self.elapsed_time_seconds()
 
     def data_transfer_rate_host(self):
         """
@@ -263,7 +270,7 @@ class BaseNANDDisk(NANDInterface):
 
         # in MiB
         return pages_to_mib((self._host_page_write_request + self._host_page_read_request),
-                            self.page_size) / Decimal(self.elapsed_time())
+                            self.page_size) / Decimal(self.elapsed_time_seconds())
 
     def get_stats(self):
         """

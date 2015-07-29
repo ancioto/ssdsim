@@ -17,6 +17,25 @@ from simulator.NAND.common import DECIMAL_PRECISION
 from simulator.NAND.common import get_quantized_decimal as qd
 
 
+# SIMULATION TYPES (THE DISTRIBUTION)
+SIM_UNIFORM_RANDOM_PAGE_WRITE = 'SIM_RNDUNIF_PAGE_WRITE'
+""" This simulates a random uniform distribution of page writes at the maximum disk capability.
+"""
+
+# SIMULATION SAMPLING TYPES
+SIM_SAMPLING_HOST_WRITE = 'SIM_SAMPLING_HOSTWRITE'
+""" The statistics are collected every self.sim_sampling page write REQUESTED by the host.
+    This occurs regardless of the actual disk data being written, so be careful that the time unit of the results
+    may be different depending on the disk performances.
+"""
+
+SIM_SAMPLING_ELAPSED_TIME = 'SIM_SAMPLING_TIME'
+""" The statistics are collected every self.sim_sampling microseconds of the ACTUAL simulation time for the
+    specific disk. This occurs regardless of the actual activity of the disk, ie: data may not have the same
+    number of samples if a disk stop working (ie: disk full).
+"""
+
+
 # USEFUL CLASS DECORATOR
 def check_init(f):
     """
@@ -39,7 +58,7 @@ class Simulation(object):
     # CONSTRUCTOR
 
     # METHODS
-    def __init__(self, simulation_name=None):
+    def __init__(self, simulation_name=None, sample_size=0, sampling=0, sampling_type=SIM_SAMPLING_HOST_WRITE):
         """
 
         :return:
@@ -58,6 +77,24 @@ class Simulation(object):
         """ Actual full path of the current simulation (base + folder name)
         """
 
+        # SIMULATION PARAMETERS
+        self.sim_sample_size = sample_size
+        """ Size of the sample (rougly the number of disk operations).
+        """
+
+        self.sim_sampling = sampling
+        """ This parameter specify how often the statistics must be collected.
+        """
+
+        self.sim_sampling_type = sampling_type
+        """ This parameter specifies the meaning of the self.sim_sampling parameter.
+        """
+
+        self.sim_type = SIM_UNIFORM_RANDOM_PAGE_WRITE
+        """ The type of the simulation: distribution of the data, type of operation performed by the host.
+            Currently fixed to "random uniform page write" as it is the only simulation available.
+        """
+
         # INTERNAL STATES
         self.init_ok = False
         """ To avoid run of a simulation wihtout initialization
@@ -67,8 +104,8 @@ class Simulation(object):
         """ The created disks to be executed
         """
 
-        self.sample_index = np.array([0])
-        """ The sample index scale useful for plotting. The value type depends on the statistic being executed.
+        self._samples = dict()
+        """ Randomly generated samples for every disk (as they may have different specs).
         """
 
         self.stats = dict()
@@ -126,6 +163,7 @@ class Simulation(object):
         """
         self._disks[name] = disk
         self.stats[name] = {'samples': 1,  # integer (starts from 1 as there is the first empty row)
+                            'extra': None,  # for internal use only
                             'time': np.array([0]),  # microseconds
                             'iops': np.array([0]),
                             'datarate': np.array([0]),  # MiB/s
@@ -151,14 +189,11 @@ class Simulation(object):
             # disk information
             with fp.open('wt') as f:
                 # first line
-                f.write("sample_index,time,iops,datarate,amplification,host_write,host_read,disk_write,disk_read,"
+                f.write("time,iops,datarate,amplification,host_write,host_read,disk_write,disk_read,"
                         "block_erased,failures\n")
 
                 # data
                 for i in range(0, self.stats[d]['samples']):
-                    # first column
-                    f.write("{},".format(self.sample_index[i]))
-
                     # columns
                     for s in ('time', 'iops', 'datarate', 'amplification', 'host_write', 'host_read',
                               'disk_write', 'disk_read', 'failures'):
@@ -188,14 +223,15 @@ class Simulation(object):
         print("Updated file '{}'".format(fp))
 
     @check_init
-    def execute_one_simulation_step(self, step_sample):
+    def execute_one_simulation_step(self, index):
         """
 
         :return:
         """
         # write of a single page in a block
         for d in self._disks:
-            self._disks[d].host_write_page(block=step_sample[0], page=step_sample[1])
+            self._disks[d].host_write_page(block=self._samples[d][0][index],
+                                           page=self._samples[d][1][index])
 
     @check_init
     def extract_and_store_stats(self, current_index):
@@ -203,23 +239,50 @@ class Simulation(object):
 
         :return:
         """
-        # update sample index
-        self.sample_index = np.append(self.sample_index, [current_index])
+        def store_stat_disk(disk):
+            # FOR INTERNAL USE ONLY
+            stats = self._disks[disk].get_stats()
+            self.stats[disk]['samples'] += 1
+            self.stats[disk]['time'] = np.append(self.stats[disk]['time'], [stats[0]])
+            self.stats[disk]['iops'] = np.append(self.stats[disk]['iops'], [stats[1]])
+            self.stats[disk]['datarate'] = np.append(self.stats[disk]['datarate'], [stats[2]])
+            self.stats[disk]['amplification'] = np.append(self.stats[disk]['amplification'], [stats[3]])
+            self.stats[disk]['host_write'] = np.append(self.stats[disk]['host_write'], [stats[4]])
+            self.stats[disk]['host_read'] = np.append(self.stats[disk]['host_read'], [stats[5]])
+            self.stats[disk]['disk_write'] = np.append(self.stats[disk]['disk_write'], [stats[6]])
+            self.stats[disk]['disk_read'] = np.append(self.stats[disk]['disk_read'], [stats[7]])
+            self.stats[disk]['block_erased'] = np.append(self.stats[disk]['block_erased'], [stats[8]])
+            self.stats[disk]['failures'] = np.append(self.stats[disk]['failures'], [stats[9]])
 
-        # for every disk read the data and store it in internal array for further SciPy manipulation
-        for d in self._disks:
-            stats = self._disks[d].get_stats()
-            self.stats[d]['samples'] += 1
-            self.stats[d]['time'] = np.append(self.stats[d]['time'], [stats[0]])
-            self.stats[d]['iops'] = np.append(self.stats[d]['iops'], [stats[1]])
-            self.stats[d]['datarate'] = np.append(self.stats[d]['datarate'], [stats[2]])
-            self.stats[d]['amplification'] = np.append(self.stats[d]['amplification'], [stats[3]])
-            self.stats[d]['host_write'] = np.append(self.stats[d]['host_write'], [stats[4]])
-            self.stats[d]['host_read'] = np.append(self.stats[d]['host_read'], [stats[5]])
-            self.stats[d]['disk_write'] = np.append(self.stats[d]['disk_write'], [stats[6]])
-            self.stats[d]['disk_read'] = np.append(self.stats[d]['disk_read'], [stats[7]])
-            self.stats[d]['block_erased'] = np.append(self.stats[d]['block_erased'], [stats[8]])
-            self.stats[d]['failures'] = np.append(self.stats[d]['failures'], [stats[9]])
+        # depending on the sampling type we need to perform different checks
+        if self.sim_sampling_type == SIM_SAMPLING_HOST_WRITE:
+            # for SIM_SAMPLING_HOST_WRITE is just a matter of current_index
+            if current_index >= self.sim_sample_size or \
+                    (current_index > 0 and current_index % self.sim_sampling == 0):
+                # for every disk read the data and store it in internal array for further SciPy manipulation
+                for d in self._disks:
+                    store_stat_disk(d)
+
+                return True
+        elif self.sim_sampling_type == SIM_SAMPLING_ELAPSED_TIME:
+            # for SIM_SAMPLING_ELAPSED_TIME is we need to check every disk to see if the internal
+            # simulation time is enough. We use the 'extra' data in stats to remember the last
+            # time we gathered the statistics
+            for d in self._disks:
+                # get the disk's simulation time
+                sim_time = self._disks[d].elapsed_time()
+
+                # check
+                if (current_index >= self.sim_sample_size and sim_time - self.stats[d]['extra'] > 0)\
+                        or sim_time - self.stats[d]['extra'] >= self.sim_sampling:
+                    # get the stats
+                    store_stat_disk(d)
+
+                    # save the new time
+                    self.stats[d]['extra'] = sim_time
+            return True
+
+        return False
 
     @check_init
     def run(self):
@@ -235,39 +298,46 @@ class Simulation(object):
         print(Style.RESET_ALL, end="")
         print("Sample data generation ... ", end="")
 
-        sample_size = 1000
-        sampling_data = 100
-        blocks = randint.rvs(0, 256, size=sample_size)
-        pages = randint.rvs(0, 64, size=sample_size)
+        for d in self._disks:
+            # as we have only one type of simulation we don't need any fancy code here
+            # just plain random data generation.
+            # every disk has a tuple where
+            #   the first element is the block index samples
+            #   the second element is the page index samples
+            self._samples[d] = (randint.rvs(0, self._disks[d].total_blocks, size=self.sim_sample_size),
+                                randint.rvs(0, self._disks[d].pages_per_block, size=self.sim_sample_size))
+
+            # in case of SIM_SAMPLING_ELAPSED_TIME we need to remember the last time we gathered the stats
+            if self.sim_sampling_type == SIM_SAMPLING_ELAPSED_TIME:
+                self.stats[d]['extra'] = 0  # initial value is 0
 
         print(Fore.GREEN + "OK")
         print(Style.RESET_ALL, end="")
 
         # run the simulation and gather statistics
-        quantum_progress = int((5 * sample_size) / 100)  # for the progress indicator
+        quantum_progress = int((1 * self.sim_sample_size) / 100)  # for the progress indicator
 
         print("RUNNING ... ", end="", flush=True)
         start_time = datetime.now()
-        for i in range(0, sample_size):
+        for i in range(0, self.sim_sample_size):
             # progress
             if i % quantum_progress == 0:
                 elapsed_time = datetime.now() - start_time
-                print('\rRUNNING ... {} % \t Elapsed: {}'.format(qd(Decimal(i * 100 / sample_size)),
+                print('\rRUNNING ... {} % \t Elapsed: {}'.format(qd(Decimal(i * 100 / self.sim_sample_size)),
                                                                  elapsed_time),
                       end="", flush=True)
 
             # execution
-            self.execute_one_simulation_step((blocks[i], pages[i]))
+            self.execute_one_simulation_step(i)
 
-            # extract statistics
-            if i > 0 and i % sampling_data == 0:
-                self.extract_and_store_stats(i)
+            # extract statistics (if needed)
+            self.extract_and_store_stats(i)
 
         # compute the total execution time
         final_elapsed_time = datetime.now() - start_time
 
         # extract final statistics
-        self.extract_and_store_stats(sample_size)
+        self.extract_and_store_stats(self.sim_sample_size)
 
         print('\rRUNNING ... ', end="", flush=True)
         print(Fore.GREEN + "DONE", flush=True)
