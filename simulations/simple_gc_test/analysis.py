@@ -33,7 +33,7 @@ def main():
         data[n][0] = np.array(data[n][0] / 1000000)
 
     # plot host write vs disk write
-    """plt.figure(1)
+    plt.figure(1)
     for n in sim_names:
         plt.plot(data[n][4], data[n][6], linestyle='-', label=n)
     plt.yscale('log')
@@ -45,7 +45,6 @@ def main():
     plt.legend(loc='best', fancybox=True, framealpha=0.5)
     plt.grid(True)
     plt.savefig(filename=str(base_path.joinpath("write_host_disk.png")), format='png', frameon=True)
-    """
 
     # plot host write time
     plt.figure(2)
