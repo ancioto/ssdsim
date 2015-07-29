@@ -17,18 +17,18 @@ class GarbageCollectorSimple(GarbageCollectorInterface):
     """
     To be written ...
     """
-    def __init__(self, mintime=500, dirtiness='0.3'):
+    def __init__(self, mintime=500, dirtiness='0.4'):
         getcontext().prec = DECIMAL_PRECISION
 
         # ATTRIBUTES
         # PARAMETERS
-        self.gc_param_mintime = mintime  # = 0.5 millisecond (every two writes)
+        self.gc_param_mintime = mintime  # = 500 microseconds (see simulation/simple_gc_test)
         """ Minimum time to wait before another run of the garbage collector.
             It's in microseconds (10^-6). Is an integer value. Must be greater or equal zero.
             If this value is zero then the gc is always executed.
         """
 
-        self.gc_param_dirtiness = Decimal(dirtiness)  # 30 %
+        self.gc_param_dirtiness = Decimal(dirtiness)  # 40 % (see simulation/simple_gc_test)
         """ Minimum percentage of dirty pages in a block to execute the garbage collector.
             It's a Decimal value and must be greater than 0 and maximum equal to 1.
             If it's equal to 1 then a block is cleaned only if all pages are dirty.
