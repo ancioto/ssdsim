@@ -7,6 +7,7 @@ Generates new NAND with custom Policies and Garbage Collectors
 """
 
 # IMPORTS
+from decimal import Decimal
 from simulator.NAND.BaseNANDDisk import BaseNANDDisk
 from simulator.NAND.WritePolicies.WritePolicyDefault import WritePolicyDefault
 from simulator.NAND.WritePolicies.WritePolicyInPlace import WritePolicyInPlace
@@ -57,10 +58,21 @@ def get_class(writepolicy=WRITEPOLICY_DEFAULT, garbagecollector=GARBAGECOLLECTOR
     return type(classname, (BaseNANDDisk, wp, gc), {})
 
 
-def get_instance(writepolicy=WRITEPOLICY_DEFAULT, garbagecollector=GARBAGECOLLECTOR_NONE):
+def get_instance(writepolicy=WRITEPOLICY_DEFAULT, garbagecollector=GARBAGECOLLECTOR_NONE,
+                 total_blocks=256, pages_per_block=64, page_size=4096,
+                 write_page_time=250, read_page_time=25, erase_block_time=1500, gc_params=None):
     """
 
     :param writepolicy:
     :return:
     """
-    return get_class(writepolicy, garbagecollector)()  # the second parenthesis is the class constructor
+    # create the instance
+    obj = get_class(writepolicy, garbagecollector)(  # here the parameters to the constructor
+        total_blocks, pages_per_block, page_size, write_page_time, read_page_time, erase_block_time)
+
+    # set the Garbage Collector parameters
+    if garbagecollector == GARBAGECOLLECTOR_SIMPLE and gc_params is not None:
+        obj.gc_param_mintime = gc_params['mintime']
+        obj.gc_param_dirtness = Decimal(gc_params['dirtness'])
+
+    return obj

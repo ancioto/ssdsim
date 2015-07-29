@@ -21,7 +21,8 @@ class BaseNANDDisk(NANDInterface):
     """
 
     # CONSTRUCTOR
-    def __init__(self):
+    def __init__(self, total_blocks=256, pages_per_block=64, page_size=4096,
+                 write_page_time=250, read_page_time=25, erase_block_time=1500):
         """
 
         :return:
@@ -30,17 +31,17 @@ class BaseNANDDisk(NANDInterface):
 
         # ATTRIBUTES
         # PHYSICAL CHARACTERISTICS
-        self.total_blocks = 256
+        self.total_blocks = total_blocks
         """ The total physical number of block available. Usually should be a multiple of 2.
             This is an integer value. Must be greater than zero.
         """
 
-        self.pages_per_block = 64
+        self.pages_per_block = pages_per_block
         """ The number of pages per single block. Usually should be a multiple of 2.
             This is an integer value. Must be greater than zero.
         """
 
-        self.page_size = 4096
+        self.page_size = page_size
         """ The physical size of a single page in [Bytes].
             This is an integer value. Must be greater than zero.
         """
@@ -62,17 +63,17 @@ class BaseNANDDisk(NANDInterface):
             This is an integer value. Must be greater than zero.
         """
 
-        self.write_page_time = 250
+        self.write_page_time = write_page_time
         """ The time to write a single page in [microseconds] (10^-6 seconds).
             This is an integer value. Must be greater than zero.
         """
 
-        self.read_page_time = 25
+        self.read_page_time = read_page_time
         """ The time to read a single page in [microseconds] (10^-6 seconds).
             This is an integer value. Must be greater than zero.
         """
 
-        self.erase_block_time = 1500
+        self.erase_block_time = erase_block_time
         """ The time to erase a single block in [microseconds] (10^-6 seconds).
             This is an integer value. Must be greater than zero.
         """
@@ -277,9 +278,9 @@ class BaseNANDDisk(NANDInterface):
 
         :return:
         """
-        return self._elapsed_time, qz(self.IOPS()), qd(self.data_transfer_rate_host()), qd(self.write_amplification()),\
-            self._host_page_write_request, self._host_page_read_request, self._page_write_executed,\
-            self._page_read_executed, self._block_erase_executed, self._page_write_failed
+        return self._elapsed_time, qz(self.IOPS()), qd(self.data_transfer_rate_host()), \
+            qd(self.write_amplification()), self._host_page_write_request, self._host_page_read_request, \
+            self._page_write_executed, self._page_read_executed, self._block_erase_executed, self._page_write_failed
 
     # DISK OPERATIONS UTILITIES
     @check_block

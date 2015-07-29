@@ -196,7 +196,7 @@ class Simulation(object):
                 for i in range(0, self.stats[d]['samples']):
                     # columns
                     for s in ('time', 'iops', 'datarate', 'amplification', 'host_write', 'host_read',
-                              'disk_write', 'disk_read', 'failures'):
+                              'disk_write', 'disk_read', 'block_erased'):
                         f.write("{},".format(self.stats[d][s][i]))
 
                     # last column
