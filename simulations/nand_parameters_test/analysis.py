@@ -84,7 +84,7 @@ def main():
     # plot the bandwidth
     plt.figure(5)
     for n in sim_names:
-        plt.plot(data[n][0], data[n][1], linestyle='-', label=n)
+        plt.plot(data[n][0], data[n][2], linestyle='-', label=n)
     plt.xscale('log')
     plt.xlabel('Elapsed time [log seconds]')
     plt.ylabel('Bandwidth [MiB\s]')
