@@ -24,9 +24,6 @@ def main():
         for i in range(0, 10):
             data[d][i] = np.genfromtxt(str(fp), dtype=None, skip_header=2, delimiter=',', usecols=[i, ])
 
-    # move to base path directory
-    base_path.cwd()
-
     # now plot host write vs disk write
     plt.plot(data["base"][4], data["base"][6], 'k-',
              data["basegc"][4], data["basegc"][6], 'r-',
