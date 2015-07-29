@@ -51,7 +51,7 @@ def main():
     for n in sim_names:
         plt.plot(data[n][0], data[n][4], linestyle='-', label=n)
     plt.xscale('log')
-    plt.xlabel('Elapsed time [seconds]')
+    plt.xlabel('Elapsed time [log seconds]')
     plt.ylabel('Host write [pages]')
     plt.title('Random writes of ~100K pages (4 KiB each)')
     plt.legend(loc='best', fancybox=True, framealpha=0.5)
@@ -81,6 +81,18 @@ def main():
     plt.legend(loc='best', fancybox=True, framealpha=0.5)
     plt.grid(True)
     plt.savefig(filename=str(base_path.joinpath("amplification.png")), format='png', frameon=True)
+
+    # plot the bandwidth
+    plt.figure(5)
+    for n in sim_names:
+        plt.plot(data[n][0], data[n][1], linestyle='-', label=n)
+    plt.xscale('log')
+    plt.xlabel('Elapsed time [log seconds]')
+    plt.ylabel('Bandwidth [MiB\s]')
+    plt.title('Random writes of ~100K pages (4 KiB each)')
+    plt.legend(loc='best', fancybox=True, framealpha=0.5)
+    plt.grid(True)
+    plt.savefig(filename=str(base_path.joinpath("iops.png")), format='png', frameon=True)
 
 #
 # MAIN ENTRY POINT

@@ -5,8 +5,7 @@
 # see README.txt or LICENSE.txt for details
 
 """
-This simulation evaluates the different performances on the same default NAND varying the simple garbage collector
-parameters. Write policy is default.
+This simulation evaluates the different performances varying the NAND (total blocks and page per block).
 """
 
 # IMPORTS
@@ -16,14 +15,12 @@ import numpy as np
 
 
 def main():
-    sim_names = ("t500d30", "t500d35", "t500d40",
-                 "t1000d30", "t1000d35", "t1000d40",
-                 "t10000d30", "t10000d35", "t10000d40")
-    # all "d45" skipped as have disk failures
+    sim_names = ("256x128", "512x64", "1024x32", "2048x16", "4096x8")
+    # "64x512", "128x256" removed as the disk fails
 
     # read the simulation data
     data = dict()
-    base_path = Path("./simulations/RESULTS/simple_gc_test_1/")
+    base_path = Path("./simulations/RESULTS/nand_parameters_test/")
     for d in sim_names:
         fp = base_path.joinpath("raw_data_{}.csv".format(d))
         data[d] = dict()
