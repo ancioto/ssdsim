@@ -25,7 +25,7 @@ def main():
     # create the disks and attach to the simulation
     demo.add_disk("base", get_instance())
     demo.add_disk("basegc", get_instance(garbagecollector=GARBAGECOLLECTOR_SIMPLE, gc_params={'mintime': 500,
-                                                                                              'dirtness': '0.01'}))
+                                                                                              'dirtiness': '0.01'}))
     demo.add_disk("wpgc", get_instance(WRITEPOLICY_INPLACE, GARBAGECOLLECTOR_SIMPLE))
     demo.add_disk("wpnegc", get_instance(WRITEPOLICY_INPLACE_NOERASE, GARBAGECOLLECTOR_SIMPLE))
 

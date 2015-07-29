@@ -73,6 +73,6 @@ def get_instance(writepolicy=WRITEPOLICY_DEFAULT, garbagecollector=GARBAGECOLLEC
     # set the Garbage Collector parameters
     if garbagecollector == GARBAGECOLLECTOR_SIMPLE and gc_params is not None:
         obj.gc_param_mintime = gc_params['mintime']
-        obj.gc_param_dirtness = Decimal(gc_params['dirtness'])
+        obj.gc_param_dirtiness = Decimal(gc_params['dirtiness'])
 
     return obj

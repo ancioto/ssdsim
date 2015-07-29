@@ -17,7 +17,7 @@ class GarbageCollectorSimple(GarbageCollectorInterface):
     """
     To be written ...
     """
-    def __init__(self, mintime=500, dirtness='0.3'):
+    def __init__(self, mintime=500, dirtiness='0.3'):
         getcontext().prec = DECIMAL_PRECISION
 
         # ATTRIBUTES
@@ -28,7 +28,7 @@ class GarbageCollectorSimple(GarbageCollectorInterface):
             If this value is zero then the gc is always executed.
         """
 
-        self.gc_param_dirtness = Decimal(dirtness)  # 30 %
+        self.gc_param_dirtiness = Decimal(dirtiness)  # 30 %
         """ Minimum percentage of dirty pages in a block to execute the garbage collector.
             It's a Decimal value and must be greater than 0 and maximum equal to 1.
             If it's equal to 1 then a block is cleaned only if all pages are dirty.
@@ -44,7 +44,7 @@ class GarbageCollectorSimple(GarbageCollectorInterface):
 
     # METHODS
     def get_gc_name(self):
-        return "simple ({}, {})".format(self.gc_param_mintime, self.gc_param_dirtness)
+        return "simple ({}, {})".format(self.gc_param_mintime, self.gc_param_dirtiness)
 
     def check_gc_run(self):
         """
@@ -64,7 +64,7 @@ class GarbageCollectorSimple(GarbageCollectorInterface):
         :return:
         """
         # check the percentage of dirty pages of this block
-        if Decimal(self._ftl[block]['dirty']) / Decimal(self.pages_per_block) >= self.gc_param_dirtness:
+        if Decimal(self._ftl[block]['dirty']) / Decimal(self.pages_per_block) >= self.gc_param_dirtiness:
             return True
         return False
 
