@@ -166,7 +166,7 @@ class Simulation(object):
                             'extra': None,  # for internal use only
                             'time': np.array([0]),  # microseconds
                             'iops': np.array([0]),
-                            'datarate': np.array([0]),  # MiB/s
+                            'bandwidth': np.array([0]),  # MiB/s
                             'amplification': np.array([0]),
                             'host_write': np.array([0]),  # pages
                             'host_read': np.array([0]),  # pages
@@ -189,13 +189,13 @@ class Simulation(object):
             # disk information
             with fp.open('wt') as f:
                 # first line
-                f.write("time,iops,datarate,amplification,host_write,host_read,disk_write,disk_read,"
+                f.write("time,iops,bandwidth,amplification,host_write,host_read,disk_write,disk_read,"
                         "block_erased,failures\n")
 
                 # data
                 for i in range(0, self.stats[d]['samples']):
                     # columns
-                    for s in ('time', 'iops', 'datarate', 'amplification', 'host_write', 'host_read',
+                    for s in ('time', 'iops', 'bandwidth', 'amplification', 'host_write', 'host_read',
                               'disk_write', 'disk_read', 'block_erased'):
                         f.write("{},".format(self.stats[d][s][i]))
 
@@ -245,7 +245,7 @@ class Simulation(object):
             self.stats[disk]['samples'] += 1
             self.stats[disk]['time'] = np.append(self.stats[disk]['time'], [stats[0]])
             self.stats[disk]['iops'] = np.append(self.stats[disk]['iops'], [stats[1]])
-            self.stats[disk]['datarate'] = np.append(self.stats[disk]['datarate'], [stats[2]])
+            self.stats[disk]['bandwidth'] = np.append(self.stats[disk]['bandwidth'], [stats[2]])
             self.stats[disk]['amplification'] = np.append(self.stats[disk]['amplification'], [stats[3]])
             self.stats[disk]['host_write'] = np.append(self.stats[disk]['host_write'], [stats[4]])
             self.stats[disk]['host_read'] = np.append(self.stats[disk]['host_read'], [stats[5]])

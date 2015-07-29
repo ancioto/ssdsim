@@ -71,7 +71,7 @@ class NANDInterface(metaclass=ABCMeta):
         return NotImplemented
 
     @abstractclassmethod
-    def data_transfer_rate_host(self):
+    def bandwidth_host(self):
         return NotImplemented
 
     # DISK OPERATIONS UTILITIES

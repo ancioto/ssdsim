@@ -148,7 +148,7 @@ class BaseNANDDisk(NANDInterface):
         """
         return "WP: {}\t\tGC: {}\n" \
                "{} pages per block, {} blocks, {} pages of {} [Bytes]. Capacity {} [MiB]\n" \
-               "Max datarate read: {}\t write: {} [MiB\s] (theoretical)\n" \
+               "Max bandwidth read: {}\t write: {} [MiB\s] (theoretical)\n" \
                "Dirty: {}\{} ([pages]\[MiB])\n" \
                "Empty: {}\{} ([pages]\[MiB])\n" \
                "In Use: {}\{} ([pages]\[MiB])\n" \
@@ -156,7 +156,7 @@ class BaseNANDDisk(NANDInterface):
                "Disk read: {}\{}, write: {}\{} ([pages]\[MiB])\n" \
                "Erased blocks: {}\{} ([blocks]\[MiB])\n" \
                "Failures: {} % ({} [pages], {} [MiB])\n" \
-               "Time: {} [s]\t IOPS: {}\t Datarate: {} [MiB\s]\n" \
+               "Time: {} [s]\t IOPS: {}\t Bandwidth: {} [MiB\s]\n" \
                "Write Amplification: {}\n" \
                "".format(self.get_write_policy_name(), self.get_gc_name(),
                          self.pages_per_block, self.total_blocks, self.total_pages, self.page_size,
@@ -181,7 +181,7 @@ class BaseNANDDisk(NANDInterface):
                          qd(bytes_to_mib(self._block_erase_executed * self.block_size)),
                          qd(self.failure_rate()), self._page_write_failed,
                          qd(pages_to_mib(self._page_write_failed, self.page_size)),
-                         qd(self.elapsed_time_seconds()), qz(self.IOPS()), qd(self.data_transfer_rate_host()),
+                         qd(self.elapsed_time_seconds()), qz(self.IOPS()), qd(self.bandwidth_host()),
                          qd(self.write_amplification()))
 
     # STATISTICAL UTILITIES
@@ -260,7 +260,7 @@ class BaseNANDDisk(NANDInterface):
         ops = self._page_write_executed + self._page_read_executed
         return Decimal(ops) / self.elapsed_time_seconds()
 
-    def data_transfer_rate_host(self):
+    def bandwidth_host(self):
         """
 
         :return:
@@ -278,7 +278,7 @@ class BaseNANDDisk(NANDInterface):
 
         :return:
         """
-        return self._elapsed_time, qz(self.IOPS()), qd(self.data_transfer_rate_host()), \
+        return self._elapsed_time, qz(self.IOPS()), qd(self.bandwidth_host()), \
             qd(self.write_amplification()), self._host_page_write_request, self._host_page_read_request, \
             self._page_write_executed, self._page_read_executed, self._block_erase_executed, self._page_write_failed
 
