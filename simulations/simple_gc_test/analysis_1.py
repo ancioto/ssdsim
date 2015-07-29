@@ -94,7 +94,7 @@ def main():
     plt.title('Random writes of ~100K pages (4 KiB each)')
     plt.legend(loc='best', fancybox=True, framealpha=0.5)
     plt.grid(True)
-    plt.savefig(filename=str(base_path.joinpath("iops.png")), format='png', frameon=True)
+    plt.savefig(filename=str(base_path.joinpath("bandwidth.png")), format='png', frameon=True)
 
 #
 # MAIN ENTRY POINT
