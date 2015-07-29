@@ -21,8 +21,8 @@ class BaseNANDDisk(NANDInterface):
     """
 
     # CONSTRUCTOR
-    def __init__(self, total_blocks=256, pages_per_block=64, page_size=4096,
-                 write_page_time=250, read_page_time=25, erase_block_time=1500):
+    def __init__(self, total_blocks=256, pages_per_block=128, page_size=4096,
+                 write_page_time=45, read_page_time=120, erase_block_time=1500):
         """
 
         :return:
