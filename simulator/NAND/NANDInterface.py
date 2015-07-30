@@ -60,10 +60,6 @@ class NANDInterface(metaclass=ABCMeta):
         return NotImplemented
 
     @abstractclassmethod
-    def gc_forced_rate(self):
-        return NotImplemented
-
-    @abstractclassmethod
     def elapsed_time(self):
         return NotImplemented
 
