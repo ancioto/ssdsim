@@ -77,6 +77,10 @@ class NANDInterface(metaclass=ABCMeta):
 
     # DISK OPERATIONS UTILITIES
     @abstractclassmethod
+    def is_write_failing(self):
+        return NotImplemented
+
+    @abstractclassmethod
     def get_empty_page(self, block=0):
         return NotImplemented
 

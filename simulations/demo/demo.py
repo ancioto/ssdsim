@@ -18,8 +18,7 @@ from simulator.NAND.NANDFactory import get_instance, WRITEPOLICY_INPLACE, WRITEP
 def main():
     # create the simulation
     demo = Simulation(simulation_name="demo",
-                      sample_size=5000, sampling=1000,
-                      sampling_type=SIM_SAMPLING_HOST_WRITE)
+                      sample_size=5000, sampling_type=SIM_SAMPLING_HOST_WRITE)
     demo.init_simulation(base_path="./simulations/RESULTS/")
 
     # create the disks and attach to the simulation

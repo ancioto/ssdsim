@@ -289,6 +289,13 @@ class BaseNANDDisk(NANDInterface):
             self._page_write_executed, self._page_read_executed, self._block_erase_executed, self._page_write_failed
 
     # DISK OPERATIONS UTILITIES
+    def is_write_failing(self):
+        """
+
+        :return:
+        """
+        return self._page_write_failed > 0
+
     @check_block
     def get_empty_page(self, block=0):
         """

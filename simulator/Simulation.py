@@ -58,7 +58,7 @@ class Simulation(object):
     # CONSTRUCTOR
 
     # METHODS
-    def __init__(self, simulation_name=None, sample_size=0, sampling=0, sampling_type=SIM_SAMPLING_HOST_WRITE):
+    def __init__(self, simulation_name=None, sample_size=0, sampling=None, sampling_type=SIM_SAMPLING_HOST_WRITE):
         """
 
         :return:
@@ -117,6 +117,14 @@ class Simulation(object):
             Then every variable has a numpy array of the extracted data.
             A special 'samples' column stores the number of written data
         """
+
+        # auto fix the sampling to 10%
+        if self.sim_sampling is None:
+            self.sim_sampling = int(self.sim_sample_size * 0.1)
+
+            # fix possible rounding errors
+            if self.sim_sample_size > 0 and self.sim_sampling <= 0:
+                self.sim_sampling = 1
 
     def init_simulation(self, base_path=None):
         """
@@ -234,17 +242,20 @@ class Simulation(object):
         """
         # write of a single page in a block
         for d in self._disks:
-            res, status = self._disks[d].host_write_page(block=self._samples[d][0][index + self._samples_drift[d]],
-                                                         page=self._samples[d][1][index + self._samples_drift[d]])
+            res, status = self._disks[d].host_write_page(block=self._samples[d][0][self._samples_drift[d]],
+                                                         page=self._samples[d][1][self._samples_drift[d]])
+
+            # ok, increase the index
+            self._samples_drift[d] += 1
 
             # is a dirty write? retry!
             if not res and status == OPERATION_FAILED_DIRTY:
-                # drift the samples
-                self._samples_drift[d] += 1
-
                 # retry one more time
-                self._disks[d].host_write_page(block=self._samples[d][0][index + self._samples_drift[d]],
-                                               page=self._samples[d][1][index + self._samples_drift[d]])
+                self._disks[d].host_write_page(block=self._samples[d][0][self._samples_drift[d]],
+                                               page=self._samples[d][1][self._samples_drift[d]])
+
+                # ok, increase the index
+                self._samples_drift[d] += 1
 
     @check_init
     def extract_and_store_stats(self, current_index):
