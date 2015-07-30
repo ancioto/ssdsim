@@ -19,24 +19,18 @@ from simulator.NAND.NANDFactory import get_instance, GARBAGECOLLECTOR_SIMPLE
 def main():
     # create the simulation
     demo = Simulation(simulation_name="simple_gc_test_1",
-                      sample_size=100000, sampling=10000,
-                      sampling_type=SIM_SAMPLING_HOST_WRITE)
+                      sample_size=10 ** 5, sampling_type=SIM_SAMPLING_HOST_WRITE)
     demo.init_simulation(base_path="./simulations/RESULTS/")
 
     # create various disks with different gc parameters
     for name, mintime, dirtiness in (
-            ("t500d30", 500, '0.3'),  # original parameters
-            ("t500d35", 500, '0.35'),  # varying the dirtiness
-            ("t500d40", 500, '0.4'),
-            ("t500d45", 500, '0.45'),  # we already know with 0.5 there are failures
-            ("t1000d30", 1000, '0.3'),
-            ("t1000d35", 1000, '0.35'),
-            ("t1000d40", 1000, '0.4'),
-            ("t1000d45", 1000, '0.45'),
-            ("t10000d30", 1000000, '0.3'),
-            ("t10000d35", 1000000, '0.35'),
-            ("t10000d40", 1000000, '0.4'),
-            ("t10000d45", 1000000, '0.45')):
+            # changing the mintime
+            ("t1", 1, '0.4'),  # 1 microseconds => always check run
+            ("t500", 500, '0.4'),  # original parameters (500 microseconds)
+            ("t5000", 5000, '0.4'),  # 5000 microseconds
+            ("t50000", 50000, '0.4'),  # 50000 microseconds
+            ("t500000", 500000, '0.4'),  # 500000 microseconds
+            ("t5000000", 5000000, '0.4')):  # 5000000 microseconds
         demo.add_disk(name, get_instance(garbagecollector=GARBAGECOLLECTOR_SIMPLE,
                                          gc_params={'mintime': mintime,
                                                     'dirtiness': dirtiness}))
