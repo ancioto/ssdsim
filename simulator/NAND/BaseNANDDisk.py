@@ -9,7 +9,8 @@ This is the base class to handle a single NAND cell in a very naive and basic im
 # IMPORTS
 from decimal import Decimal, getcontext
 from simulator.NAND.NANDInterface import NANDInterface
-from simulator.NAND.common import PAGE_EMPTY, PAGE_IN_USE, PAGE_DIRTY, DECIMAL_PRECISION, bytes_to_mib, pages_to_mib
+from simulator.NAND.common import PAGE_EMPTY, PAGE_IN_USE, PAGE_DIRTY, DECIMAL_PRECISION, bytes_to_mib, pages_to_mib, \
+    OPERATION_SUCCESS, OPERATION_FAILED_DIRTY, OPERATION_FAILED_DISKFULL
 from simulator.NAND.common import get_quantized_decimal as qd, check_block, check_page
 from simulator.NAND.common import get_integer_decimal as qz
 
@@ -337,7 +338,7 @@ class BaseNANDDisk(NANDInterface):
             self._ftl[block]['empty'] -= 1  # we lost one empty page in this block
             self._elapsed_time += self.write_page_time  # time spent to write the data
             self._page_write_executed += 1  # one page written
-            return True
+            return True, OPERATION_SUCCESS
 
         # if status is IN USE => we consider a data change,
         # we use the current disk policy to find a new page to write the new data. In case of success we invalidate
@@ -348,12 +349,12 @@ class BaseNANDDisk(NANDInterface):
                 # yes, we need a policy to decide how to write
                 if self.full_block_write_policy(block=block, page=page):
                     # all statistic MUST BE updated inside the policy method
-                    return True
+                    return True, OPERATION_SUCCESS
                 else:
                     # we didn't found a suitable place to write the new data, the write request failed
                     # this is a disk error: the garbage collector was unable to make room for new data
                     self._page_write_failed += 1
-                    return False
+                    return False, OPERATION_FAILED_DISKFULL
             else:
                 # no, we still have space, we just need a new empty page on this block
                 # find and write the new page
@@ -370,11 +371,11 @@ class BaseNANDDisk(NANDInterface):
                 self._ftl[block]['dirty'] += 1  # we have one more dirty page in this block
                 self._elapsed_time += self.write_page_time  # time spent to write the data
                 self._page_write_executed += 1  # one page written
-                return True
+                return True, OPERATION_SUCCESS
 
         # if status is DIRTY => we discard this write operation
         # (it's not a disk error, it's a bad random value)
-        return False
+        return False, OPERATION_FAILED_DIRTY
 
     @check_block
     @check_page
@@ -392,10 +393,10 @@ class BaseNANDDisk(NANDInterface):
             # update statistics
             self._elapsed_time += self.read_page_time  # time spent to read the data
             self._page_read_executed += 1  # we executed a read of a page
-            return True
+            return True, OPERATION_SUCCESS
 
         # no valid data to read
-        return False
+        return False, OPERATION_FAILED_DIRTY  # always fail to dirty read (empty or dirty page)
 
     @check_block
     def raw_erase_block(self, block=0):
@@ -432,12 +433,12 @@ class BaseNANDDisk(NANDInterface):
         self.run_gc()
 
         # execute the write
-        if self.raw_write_page(block=block, page=page):
+        res, status = self.raw_write_page(block=block, page=page)
+        if res:
             # update statistics
             self._host_page_write_request += 1  # the host actually asked to write a page
-            return True
 
-        return False
+        return res, status
 
     @check_block
     @check_page
@@ -452,9 +453,9 @@ class BaseNANDDisk(NANDInterface):
         self.run_gc()
 
         # execute the write
-        if self.raw_read_page(block=block, page=page):
+        res, status = self.raw_read_page(block=block, page=page)
+        if res:
             # update statistics
             self._host_page_read_request += 1  # the host actually asked to read a page
-            return True
 
-        return False
+        return res, status

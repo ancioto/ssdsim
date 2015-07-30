@@ -13,7 +13,7 @@ from colorama import init, Fore, Style
 from pathlib import Path
 from scipy.stats import randint
 import numpy as np
-from simulator.NAND.common import DECIMAL_PRECISION
+from simulator.NAND.common import DECIMAL_PRECISION, OPERATION_FAILED_DIRTY
 from simulator.NAND.common import get_quantized_decimal as qd
 
 
@@ -106,6 +106,10 @@ class Simulation(object):
 
         self._samples = dict()
         """ Randomly generated samples for every disk (as they may have different specs).
+        """
+
+        self._samples_drift = dict()
+        """ TO be used to handle retries.
         """
 
         self.stats = dict()
@@ -230,8 +234,17 @@ class Simulation(object):
         """
         # write of a single page in a block
         for d in self._disks:
-            self._disks[d].host_write_page(block=self._samples[d][0][index],
-                                           page=self._samples[d][1][index])
+            res, status = self._disks[d].host_write_page(block=self._samples[d][0][index + self._samples_drift[d]],
+                                                         page=self._samples[d][1][index + self._samples_drift[d]])
+
+            # is a dirty write? retry!
+            if not res and status == OPERATION_FAILED_DIRTY:
+                # drift the samples
+                self._samples_drift[d] += 1
+
+                # retry one more time
+                self._disks[d].host_write_page(block=self._samples[d][0][index + self._samples_drift[d]],
+                                               page=self._samples[d][1][index + self._samples_drift[d]])
 
     @check_init
     def extract_and_store_stats(self, current_index):
@@ -304,8 +317,12 @@ class Simulation(object):
             # every disk has a tuple where
             #   the first element is the block index samples
             #   the second element is the page index samples
-            self._samples[d] = (randint.rvs(0, self._disks[d].total_blocks, size=self.sim_sample_size),
-                                randint.rvs(0, self._disks[d].pages_per_block, size=self.sim_sample_size))
+            # we generate a double amount of samples as we retry one time each first attempt in case of failures
+            self._samples[d] = (randint.rvs(0, self._disks[d].total_blocks, size=self.sim_sample_size * 2),
+                                randint.rvs(0, self._disks[d].pages_per_block, size=self.sim_sample_size * 2))
+
+            # set the initial drift to zero
+            self._samples_drift[d] = 0
 
             # in case of SIM_SAMPLING_ELAPSED_TIME we need to remember the last time we gathered the stats
             if self.sim_sampling_type == SIM_SAMPLING_ELAPSED_TIME:
@@ -343,7 +360,13 @@ class Simulation(object):
         print(Fore.GREEN + "DONE", flush=True)
         print(Style.RESET_ALL, end="")
 
-        print('Total simulation time: {}\n\n'.format(final_elapsed_time))
+        print('Total simulation time: {}'.format(final_elapsed_time))
+
+        # drift results
+        print("", end="")
+        for d in self._disks:
+            print("{}:{}\t".format(d, self._samples_drift[d]), end="")
+        print("\n\n", end="")
 
         # output the end disks information
         self.output_disks("_results")
