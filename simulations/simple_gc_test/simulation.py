@@ -17,7 +17,7 @@ from simulator.NAND.NANDFactory import get_instance, GARBAGECOLLECTOR_SIMPLE
 def main():
     # create the simulation
     demo = Simulation(simulation_name="simple_gc_test",
-                      sample_size=100000, sampling_type=SIM_SAMPLING_HOST_WRITE)
+                      sample_size=10 ** 5, sampling_type=SIM_SAMPLING_HOST_WRITE)
     demo.init_simulation(base_path="./simulations/RESULTS/")
 
     # create various disks with different gc parameters

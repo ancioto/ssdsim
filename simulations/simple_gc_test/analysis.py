@@ -30,7 +30,7 @@ def main():
 
     # convert all times in seconds
     for n in sim_names:
-        data[n][0] = np.array(data[n][0] / 1000000)
+        data[n][0] = np.array(data[n][0] / 10 ** 6)
 
     # plot host write vs disk write
     plt.figure(1)
@@ -38,6 +38,7 @@ def main():
         plt.plot(data[n][4], data[n][6], linestyle='-', label=n)
     plt.yscale('log')
     plt.xscale('log')
+    plt.axis([10 ** 4, 10 ** 5, 10 ** 4, 10 ** 6])  # [xmin, xmax, ymin, ymax]
     plt.xlabel('Host write [log pages]')
     plt.ylabel('Disk write [log pages]')
     plt.title('Random writes of pages (4 KiB each)')
