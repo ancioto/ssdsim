@@ -278,7 +278,7 @@ class Simulation(object):
             self.stats[disk]['disk_read'] = np.append(self.stats[disk]['disk_read'], [stats[7]])
             self.stats[disk]['block_erased'] = np.append(self.stats[disk]['block_erased'], [stats[8]])
             self.stats[disk]['failures'] = np.append(self.stats[disk]['failures'], [stats[9]])
-            self.stats[disk]['dirty'] = np.append(self.stats[disk]['dirty'], [stats[9]])
+            self.stats[disk]['dirty'] = np.append(self.stats[disk]['dirty'], [stats[10]])
 
         # depending on the sampling type we need to perform different checks
         if self.sim_sampling_type == SIM_SAMPLING_HOST_WRITE:
