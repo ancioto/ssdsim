@@ -16,7 +16,7 @@ import numpy as np
 
 
 def main():
-    sim_names = ("128M", "512M", "2G", "8G")
+    sim_names = ("256M", "512M", "2G", "8G")
 
     # read the simulation data
     data = dict()
