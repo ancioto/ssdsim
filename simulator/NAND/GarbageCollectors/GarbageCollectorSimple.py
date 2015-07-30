@@ -17,12 +17,12 @@ class GarbageCollectorSimple(GarbageCollectorInterface):
     """
     To be written ...
     """
-    def __init__(self, mintime=500, dirtiness='0.4'):
+    def __init__(self, mintime=500000, dirtiness='0.4'):
         getcontext().prec = DECIMAL_PRECISION
 
         # ATTRIBUTES
         # PARAMETERS
-        self.gc_param_mintime = mintime  # = 500 microseconds (see simulation/simple_gc_test)
+        self.gc_param_mintime = mintime  # = 0.5 seconds (see simulation/simple_gc_test)
         """ Minimum time to wait before another run of the garbage collector.
             It's in microseconds (10^-6). Is an integer value. Must be greater or equal zero.
             If this value is zero then the gc is always executed.
