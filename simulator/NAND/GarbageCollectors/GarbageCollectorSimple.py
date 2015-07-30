@@ -66,8 +66,9 @@ class GarbageCollectorSimple(GarbageCollectorInterface):
         # if the force is set, we need at least a dirty page in a block
         if force_run and self._ftl[block]['dirty'] > 0:
             return True
+
         # check the percentage of dirty pages of this block
-        elif Decimal(self._ftl[block]['dirty']) / Decimal(self.pages_per_block) >= self.gc_param_dirtiness:
+        if Decimal(self._ftl[block]['dirty']) / Decimal(self.pages_per_block) >= self.gc_param_dirtiness:
             return True
         return False
 
