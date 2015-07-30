@@ -18,13 +18,13 @@ from simulator.NAND.NANDFactory import get_instance, WRITEPOLICY_INPLACE, WRITEP
 def main():
     # create the simulation
     demo = Simulation(simulation_name="demo",
-                      sample_size=5000, sampling_type=SIM_SAMPLING_HOST_WRITE)
+                      sample_size=20000, sampling_type=SIM_SAMPLING_HOST_WRITE)
     demo.init_simulation(base_path="./simulations/RESULTS/")
 
     # create the disks and attach to the simulation
     demo.add_disk("base", get_instance())
     demo.add_disk("basegc", get_instance(garbagecollector=GARBAGECOLLECTOR_SIMPLE, gc_params={'mintime': 500,
-                                                                                              'dirtiness': '0.01'}))
+                                                                                              'dirtiness': '0.1'}))
     demo.add_disk("wpgc", get_instance(WRITEPOLICY_INPLACE, GARBAGECOLLECTOR_SIMPLE))
     demo.add_disk("wpnegc", get_instance(WRITEPOLICY_INPLACE_NOERASE, GARBAGECOLLECTOR_SIMPLE))
 
