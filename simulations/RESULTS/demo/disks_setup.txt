@@ -1,5 +1,5 @@
-Disk name: wpgc
-WP: in place		GC: simple (500, 0.4)
+Disk name: base
+WP: default		GC: none
 128 pages per block, 256 blocks, 32768 pages of 4096 [Bytes]. Capacity 128.00 [MiB]
 Max bandwidth read: 32.55	 write: 86.81 [MiB\s] (theoretical)
 Dirty: 0\0.00 ([pages]\[MiB])
@@ -15,7 +15,7 @@ Write Amplification: 0.00
 
 
 Disk name: wpnegc
-WP: in place with no erase		GC: simple (500, 0.4)
+WP: in place with no erase		GC: simple (500000, 0.4)
 128 pages per block, 256 blocks, 32768 pages of 4096 [Bytes]. Capacity 128.00 [MiB]
 Max bandwidth read: 32.55	 write: 86.81 [MiB\s] (theoretical)
 Dirty: 0\0.00 ([pages]\[MiB])
@@ -46,8 +46,8 @@ Time: 0.00 [s]	 IOPS: 0	 Bandwidth: 0.00 [MiB\s]
 Write Amplification: 0.00
 
 
-Disk name: base
-WP: default		GC: none
+Disk name: wpgc
+WP: in place		GC: simple (500000, 0.4)
 128 pages per block, 256 blocks, 32768 pages of 4096 [Bytes]. Capacity 128.00 [MiB]
 Max bandwidth read: 32.55	 write: 86.81 [MiB\s] (theoretical)
 Dirty: 0\0.00 ([pages]\[MiB])
