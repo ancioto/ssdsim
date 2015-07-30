@@ -98,6 +98,17 @@ def main():
     plt.grid(True)
     plt.savefig(filename=str(base_path.joinpath("dirtypages.png")), format='png', frameon=True)
 
+    # plot the failures
+    plt.figure(7)
+    for n in sim_names:
+        plt.plot(data[n][4], data[n][9], linestyle='-', label=n)
+    plt.xlabel('Host write [pages]')
+    plt.ylabel('Write failed [pages]')
+    plt.title('Random writes of pages (4 KiB each)')
+    plt.legend(loc='best', fancybox=True, framealpha=0.5)
+    plt.grid(True)
+    plt.savefig(filename=str(base_path.joinpath("failures.png")), format='png', frameon=True)
+
 #
 # MAIN ENTRY POINT
 #
