@@ -28,7 +28,7 @@ def main():
 
     # convert all times in seconds
     for n in sim_names:
-        data[n][0] = np.array(data[n][0] / 1000000)
+        data[n][0] = np.array(data[n][0] / 10 ** 6)
 
     # plot host write vs disk write
     plt.figure(1)

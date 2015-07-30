@@ -168,8 +168,8 @@ class BaseNANDDisk(NANDInterface):
                "".format(self.get_write_policy_name(), self.get_gc_name(),
                          self.pages_per_block, self.total_blocks, self.total_pages, self.page_size,
                          qd(bytes_to_mib(self.total_disk_size)),
-                         qd(bytes_to_mib(Decimal(1000000 / self.read_page_time)) * self.page_size),
-                         qd(bytes_to_mib(Decimal(1000000 / self.write_page_time)) * self.page_size),
+                         qd(bytes_to_mib(Decimal(10 ** 6 / self.read_page_time)) * self.page_size),
+                         qd(bytes_to_mib(Decimal(10 ** 6 / self.write_page_time)) * self.page_size),
                          self.number_of_dirty_pages(),
                          qd(pages_to_mib(self.number_of_dirty_pages(), self.page_size)),
                          self.number_of_empty_pages(),
@@ -254,7 +254,7 @@ class BaseNANDDisk(NANDInterface):
 
         :return:
         """
-        return Decimal(self._elapsed_time) / Decimal(1000000)
+        return Decimal(self._elapsed_time) / Decimal(10 ** 6)
 
     def IOPS(self):
         """
