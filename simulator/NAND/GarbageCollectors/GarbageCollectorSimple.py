@@ -46,7 +46,7 @@ class GarbageCollectorSimple(GarbageCollectorInterface):
     def get_gc_name(self):
         return "simple ({}, {})".format(self.gc_param_mintime, self.gc_param_dirtiness)
 
-    def check_gc_run(self):
+    def check_gc_run(self, force_run=False):
         """
 
         :return:
@@ -83,7 +83,8 @@ class GarbageCollectorSimple(GarbageCollectorInterface):
         #         this is a read and only useful data are read
         temp_block = dict()
         for p in range(0, self.pages_per_block):
-            if self.raw_read_page(block=block, page=p):
+            res, status = self.raw_read_page(block=block, page=p)
+            if res:
                 temp_block[p] = PAGE_IN_USE  # the page is valid and in use
             else:
                 temp_block[p] = PAGE_EMPTY  # reset the page, even if is dirty

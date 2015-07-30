@@ -185,7 +185,8 @@ class Simulation(object):
                             'disk_write': np.array([0]),  # pages
                             'disk_read': np.array([0]),  # pages
                             'block_erased': np.array([0]),  # blocks
-                            'failures': np.array([0])}  # pages
+                            'failures': np.array([0]),  # pages
+                            'dirty': np.array([0])}  # pages
 
     @check_init
     def output_stats(self):
@@ -202,17 +203,17 @@ class Simulation(object):
             with fp.open('wt') as f:
                 # first line
                 f.write("time,iops,bandwidth,amplification,host_write,host_read,disk_write,disk_read,"
-                        "block_erased,failures\n")
+                        "block_erased,failures,dirty\n")
 
                 # data
                 for i in range(0, self.stats[d]['samples']):
                     # columns
                     for s in ('time', 'iops', 'bandwidth', 'amplification', 'host_write', 'host_read',
-                              'disk_write', 'disk_read', 'block_erased'):
+                              'disk_write', 'disk_read', 'block_erased', 'failures'):
                         f.write("{},".format(self.stats[d][s][i]))
 
                     # last column
-                    f.write('{}\n'.format(self.stats[d]['failures'][i]))
+                    f.write('{}\n'.format(self.stats[d]['dirty'][i]))
 
             # status
             print("Updated file '{}'".format(fp))
@@ -277,6 +278,7 @@ class Simulation(object):
             self.stats[disk]['disk_read'] = np.append(self.stats[disk]['disk_read'], [stats[7]])
             self.stats[disk]['block_erased'] = np.append(self.stats[disk]['block_erased'], [stats[8]])
             self.stats[disk]['failures'] = np.append(self.stats[disk]['failures'], [stats[9]])
+            self.stats[disk]['dirty'] = np.append(self.stats[disk]['dirty'], [stats[9]])
 
         # depending on the sampling type we need to perform different checks
         if self.sim_sampling_type == SIM_SAMPLING_HOST_WRITE:
@@ -344,6 +346,8 @@ class Simulation(object):
 
         # run the simulation and gather statistics
         quantum_progress = int((1 * self.sim_sample_size) / 100)  # for the progress indicator
+        if quantum_progress <= 0:
+            quantum_progress = 1
 
         print("RUNNING ... ", end="", flush=True)
         start_time = datetime.now()

@@ -35,7 +35,8 @@ class WritePolicyInPlace(WritePolicyInterface):
         #         this is a read and only useful data are read
         temp_block = dict()
         for p in range(0, self.pages_per_block):
-            if self.raw_read_page(block=block, page=p):
+            res, status = self.raw_read_page(block=block, page=p)
+            if res:
                 temp_block[p] = PAGE_IN_USE  # the page is valid and in use
             else:
                 temp_block[p] = PAGE_EMPTY  # reset the page, even if is dirty

@@ -43,7 +43,8 @@ class WritePolicyInPlaceNoErase(WritePolicyDefault):
             temp_block = dict()
             for p in range(0, self.pages_per_block):
                 # READ and change the status of the original page
-                if self.raw_read_page(block=block, page=p):
+                res, status = self.raw_read_page(block=block, page=p)
+                if res:
                     temp_block[p] = PAGE_IN_USE  # the page is valid and in use
                     self._ftl[block][p] = PAGE_DIRTY  # set the original page as dirty
                     self._ftl[block]['dirty'] += 1  # new dirty page

@@ -19,7 +19,7 @@ class GarbageCollectorNone(GarbageCollectorInterface):
     def get_gc_name(self):
         return "none"
 
-    def check_gc_run(self):
+    def check_gc_run(self, force_run=False):
         """
 
         :return:

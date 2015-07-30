@@ -17,7 +17,7 @@ class GarbageCollectorInterface(NANDInterface, metaclass=ABCMeta):
     """
     # METHODS
     @abstractclassmethod
-    def check_gc_run(self):
+    def check_gc_run(self, force_run=False):
         return NotImplemented
 
     @abstractclassmethod
@@ -38,7 +38,7 @@ class GarbageCollectorInterface(NANDInterface, metaclass=ABCMeta):
         :return:
         """
         # check the overall conditions to execute the gc
-        if force_run or self.check_gc_run():
+        if self.check_gc_run(force_run=force_run):
             # run the gc on every block
             execution = False
             for b in range(0, self.total_blocks):

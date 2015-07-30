@@ -162,6 +162,7 @@ class BaseNANDDisk(NANDInterface):
                "Disk read: {}\{}, write: {}\{} ([pages]\[MiB])\n" \
                "Erased blocks: {}\{} ([blocks]\[MiB])\n" \
                "Failures: {} % ({} [pages], {} [MiB])\n" \
+               "GC Forced count: {}\n" \
                "Time: {} [s]\t IOPS: {}\t Bandwidth: {} [MiB\s]\n" \
                "Write Amplification: {}\n" \
                "".format(self.get_write_policy_name(), self.get_gc_name(),
@@ -187,6 +188,7 @@ class BaseNANDDisk(NANDInterface):
                          qd(bytes_to_mib(self._block_erase_executed * self.block_size)),
                          qd(self.failure_rate()), self._page_write_failed,
                          qd(pages_to_mib(self._page_write_failed, self.page_size)),
+                         self._gc_forced_count,
                          qd(self.elapsed_time_seconds()), qz(self.IOPS()), qd(self.bandwidth_host()),
                          qd(self.write_amplification()))
 
@@ -286,7 +288,8 @@ class BaseNANDDisk(NANDInterface):
         """
         return self._elapsed_time, qz(self.IOPS()), qd(self.bandwidth_host()), \
             qd(self.write_amplification()), self._host_page_write_request, self._host_page_read_request, \
-            self._page_write_executed, self._page_read_executed, self._block_erase_executed, self._page_write_failed
+            self._page_write_executed, self._page_read_executed, self._block_erase_executed,\
+            self._page_write_failed, self.number_of_dirty_pages()
 
     # DISK OPERATIONS UTILITIES
     def is_write_failing(self):
@@ -355,7 +358,7 @@ class BaseNANDDisk(NANDInterface):
         # if status is IN USE => we consider a data change,
         # we use the current disk policy to find a new page to write the new data. In case of success we invalidate
         # the current page, otherwise the operation fails.
-        elif s == PAGE_IN_USE:
+        if s == PAGE_IN_USE:
             # is the block full?
             if self._ftl[block]['empty'] <= 0:
                 # yes, we need a policy to decide how to write
@@ -449,6 +452,13 @@ class BaseNANDDisk(NANDInterface):
         if res:
             # update statistics
             self._host_page_write_request += 1  # the host actually asked to write a page
+        elif not gc_was_forced and status == OPERATION_FAILED_DISKFULL:
+            # if we had a failure, we try it again
+            self._page_write_failed -= 1
+
+            # force a gc run and retry
+            self._gc_forced_count += 1
+            return self.host_write_page(block=block, page=page, gc_was_forced=True)
 
         return res, status
 
