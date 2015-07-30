@@ -57,14 +57,17 @@ class GarbageCollectorSimple(GarbageCollectorInterface):
         return False
 
     @check_block
-    def check_gc_block(self, block=0):
+    def check_gc_block(self, block=0, force_run=False):
         """
 
         :param block:
         :return:
         """
+        # if the force is set, we need at least a dirty page in a block
+        if force_run and self._ftl[block]['dirty'] > 0:
+            return True
         # check the percentage of dirty pages of this block
-        if Decimal(self._ftl[block]['dirty']) / Decimal(self.pages_per_block) >= self.gc_param_dirtiness:
+        elif Decimal(self._ftl[block]['dirty']) / Decimal(self.pages_per_block) >= self.gc_param_dirtiness:
             return True
         return False
 

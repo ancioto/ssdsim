@@ -115,6 +115,11 @@ class BaseNANDDisk(NANDInterface):
             This is an integer value.
         """
 
+        self._gc_forced_count = 0
+        """ Total number of times the gc was forced to clean dirty pages.
+            This is an integer value.
+        """
+
         # INTERNAL STATE
         self._ftl = dict()
         """ This is the full state of the flash memory.
@@ -157,6 +162,7 @@ class BaseNANDDisk(NANDInterface):
                "Disk read: {}\{}, write: {}\{} ([pages]\[MiB])\n" \
                "Erased blocks: {}\{} ([blocks]\[MiB])\n" \
                "Failures: {} % ({} [pages], {} [MiB])\n" \
+               "GC Forced ratio: {} ({} [#])\n" \
                "Time: {} [s]\t IOPS: {}\t Bandwidth: {} [MiB\s]\n" \
                "Write Amplification: {}\n" \
                "".format(self.get_write_policy_name(), self.get_gc_name(),
@@ -182,6 +188,7 @@ class BaseNANDDisk(NANDInterface):
                          qd(bytes_to_mib(self._block_erase_executed * self.block_size)),
                          qd(self.failure_rate()), self._page_write_failed,
                          qd(pages_to_mib(self._page_write_failed, self.page_size)),
+                         qd(self.gc_forced_rate()), self._gc_forced_count,
                          qd(self.elapsed_time_seconds()), qz(self.IOPS()), qd(self.bandwidth_host()),
                          qd(self.write_amplification()))
 
@@ -234,6 +241,17 @@ class BaseNANDDisk(NANDInterface):
             return Decimal('0')
 
         return Decimal(self._page_write_failed * 100) / Decimal(self._page_write_executed)
+
+    def gc_forced_rate(self):
+        """
+
+        :return:
+        """
+        # avoid divide by zero errors
+        if self._host_page_write_request <= 0:
+            return Decimal('0')
+
+        return Decimal(self._gc_forced_count * self.pages_per_block) / Decimal(self._host_page_write_request)
 
     def elapsed_time(self):
         """
@@ -437,8 +455,13 @@ class BaseNANDDisk(NANDInterface):
         if res:
             # update statistics
             self._host_page_write_request += 1  # the host actually asked to write a page
+
+            # if we had a failure, we have recovered it
+            if gc_was_forced:
+                self._page_write_failed -= 1
         elif not gc_was_forced and status == OPERATION_FAILED_DISKFULL:
             # force a gc run and retry
+            self._gc_forced_count += 1
             return self.host_write_page(block=block, page=page, gc_was_forced=True)
 
         return res, status

@@ -21,7 +21,7 @@ class GarbageCollectorInterface(NANDInterface, metaclass=ABCMeta):
         return NotImplemented
 
     @abstractclassmethod
-    def check_gc_block(self, block=0):
+    def check_gc_block(self, block=0, force_run=False):
         return NotImplemented
 
     @abstractclassmethod
@@ -43,7 +43,7 @@ class GarbageCollectorInterface(NANDInterface, metaclass=ABCMeta):
             execution = False
             for b in range(0, self.total_blocks):
                 # check the conditions on this block
-                if force_run or self.check_gc_block(block=b):
+                if self.check_gc_block(block=b, force_run=False):
                     # ok, run it
                     res = self.execute_gc_block(block=b)
                     if not execution and res:

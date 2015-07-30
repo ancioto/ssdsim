@@ -2,43 +2,14 @@ Disk name: wpnegc
 WP: in place with no erase		GC: simple (500, 0.4)
 128 pages per block, 256 blocks, 32768 pages of 4096 [Bytes]. Capacity 128.00 [MiB]
 Max bandwidth read: 32.55	 write: 86.81 [MiB\s] (theoretical)
-Dirty: 382\1.49 ([pages]\[MiB])
+Dirty: 394\1.54 ([pages]\[MiB])
 Empty: 27768\108.47 ([pages]\[MiB])
-In Use: 4618\18.04 ([pages]\[MiB])
+In Use: 4606\17.99 ([pages]\[MiB])
 Host read: 0\0.00, write: 5000\19.53 ([pages]\[MiB])
 Disk read: 0\0.00, write: 5000\19.53 ([pages]\[MiB])
 Erased blocks: 0\0.00 ([blocks]\[MiB])
 Failures: 0.00 % (0 [pages], 0.00 [MiB])
-Time: 0.22 [s]	 IOPS: 22222	 Bandwidth: 86.81 [MiB\s]
-Write Amplification: 1.00
-
-
-Disk name: basegc
-WP: default		GC: simple (500, 0.01)
-128 pages per block, 256 blocks, 32768 pages of 4096 [Bytes]. Capacity 128.00 [MiB]
-Max bandwidth read: 32.55	 write: 86.81 [MiB\s] (theoretical)
-Dirty: 119\0.46 ([pages]\[MiB])
-Empty: 15414\60.21 ([pages]\[MiB])
-In Use: 17235\67.32 ([pages]\[MiB])
-Host read: 0\0.00, write: 5000\19.53 ([pages]\[MiB])
-Disk read: 37668\147.14, write: 55816\218.03 ([pages]\[MiB])
-Erased blocks: 397\198.50 ([blocks]\[MiB])
-Failures: 0.00 % (0 [pages], 0.00 [MiB])
-Time: 7.63 [s]	 IOPS: 12256	 Bandwidth: 2.56 [MiB\s]
-Write Amplification: 11.16
-
-
-Disk name: base
-WP: default		GC: none
-128 pages per block, 256 blocks, 32768 pages of 4096 [Bytes]. Capacity 128.00 [MiB]
-Max bandwidth read: 32.55	 write: 86.81 [MiB\s] (theoretical)
-Dirty: 347\1.36 ([pages]\[MiB])
-Empty: 27769\108.47 ([pages]\[MiB])
-In Use: 4652\18.17 ([pages]\[MiB])
-Host read: 0\0.00, write: 4999\19.53 ([pages]\[MiB])
-Disk read: 0\0.00, write: 4999\19.53 ([pages]\[MiB])
-Erased blocks: 0\0.00 ([blocks]\[MiB])
-Failures: 0.00 % (0 [pages], 0.00 [MiB])
+GC Forced ratio: 0.00 (0 [#])
 Time: 0.22 [s]	 IOPS: 22222	 Bandwidth: 86.81 [MiB\s]
 Write Amplification: 1.00
 
@@ -47,14 +18,47 @@ Disk name: wpgc
 WP: in place		GC: simple (500, 0.4)
 128 pages per block, 256 blocks, 32768 pages of 4096 [Bytes]. Capacity 128.00 [MiB]
 Max bandwidth read: 32.55	 write: 86.81 [MiB\s] (theoretical)
-Dirty: 369\1.44 ([pages]\[MiB])
+Dirty: 348\1.36 ([pages]\[MiB])
 Empty: 27768\108.47 ([pages]\[MiB])
-In Use: 4631\18.09 ([pages]\[MiB])
+In Use: 4652\18.17 ([pages]\[MiB])
 Host read: 0\0.00, write: 5000\19.53 ([pages]\[MiB])
 Disk read: 0\0.00, write: 5000\19.53 ([pages]\[MiB])
 Erased blocks: 0\0.00 ([blocks]\[MiB])
 Failures: 0.00 % (0 [pages], 0.00 [MiB])
+GC Forced ratio: 0.00 (0 [#])
 Time: 0.22 [s]	 IOPS: 22222	 Bandwidth: 86.81 [MiB\s]
 Write Amplification: 1.00
+
+
+Disk name: base
+WP: default		GC: none
+128 pages per block, 256 blocks, 32768 pages of 4096 [Bytes]. Capacity 128.00 [MiB]
+Max bandwidth read: 32.55	 write: 86.81 [MiB\s] (theoretical)
+Dirty: 354\1.38 ([pages]\[MiB])
+Empty: 27768\108.47 ([pages]\[MiB])
+In Use: 4646\18.15 ([pages]\[MiB])
+Host read: 0\0.00, write: 5000\19.53 ([pages]\[MiB])
+Disk read: 0\0.00, write: 5000\19.53 ([pages]\[MiB])
+Erased blocks: 0\0.00 ([blocks]\[MiB])
+Failures: 0.00 % (0 [pages], 0.00 [MiB])
+GC Forced ratio: 0.00 (0 [#])
+Time: 0.22 [s]	 IOPS: 22222	 Bandwidth: 86.81 [MiB\s]
+Write Amplification: 1.00
+
+
+Disk name: basegc
+WP: default		GC: simple (500, 0.01)
+128 pages per block, 256 blocks, 32768 pages of 4096 [Bytes]. Capacity 128.00 [MiB]
+Max bandwidth read: 32.55	 write: 86.81 [MiB\s] (theoretical)
+Dirty: 146\0.57 ([pages]\[MiB])
+Empty: 16117\62.96 ([pages]\[MiB])
+In Use: 16505\64.47 ([pages]\[MiB])
+Host read: 0\0.00, write: 5000\19.53 ([pages]\[MiB])
+Disk read: 34843\136.11, write: 52232\204.03 ([pages]\[MiB])
+Erased blocks: 369\184.50 ([blocks]\[MiB])
+Failures: 0.00 % (0 [pages], 0.00 [MiB])
+GC Forced ratio: 0.00 (0 [#])
+Time: 7.09 [s]	 IOPS: 12290	 Bandwidth: 2.76 [MiB\s]
+Write Amplification: 10.45
 
 

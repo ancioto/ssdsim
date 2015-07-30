@@ -234,17 +234,20 @@ class Simulation(object):
         """
         # write of a single page in a block
         for d in self._disks:
-            res, status = self._disks[d].host_write_page(block=self._samples[d][0][index + self._samples_drift[d]],
-                                                         page=self._samples[d][1][index + self._samples_drift[d]])
+            # we need to automatically skip disks with an high force ratio: the disk is spending time to
+            # execute the gc instead of writing
+            if self._disks[d].gc_forced_rate() < Decimal('10'):
+                res, status = self._disks[d].host_write_page(block=self._samples[d][0][index + self._samples_drift[d]],
+                                                             page=self._samples[d][1][index + self._samples_drift[d]])
 
-            # is a dirty write? retry!
-            if not res and status == OPERATION_FAILED_DIRTY:
-                # drift the samples
-                self._samples_drift[d] += 1
+                # is a dirty write? retry!
+                if not res and status == OPERATION_FAILED_DIRTY:
+                    # drift the samples
+                    self._samples_drift[d] += 1
 
-                # retry one more time
-                self._disks[d].host_write_page(block=self._samples[d][0][index + self._samples_drift[d]],
-                                               page=self._samples[d][1][index + self._samples_drift[d]])
+                    # retry one more time
+                    self._disks[d].host_write_page(block=self._samples[d][0][index + self._samples_drift[d]],
+                                                   page=self._samples[d][1][index + self._samples_drift[d]])
 
     @check_init
     def extract_and_store_stats(self, current_index):

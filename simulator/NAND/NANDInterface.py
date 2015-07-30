@@ -35,6 +35,7 @@ class NANDInterface(metaclass=ABCMeta):
         self._host_page_read_request = None
         self._page_read_executed = None
         self._block_erase_executed = None
+        self._gc_forced_count = None
         self._ftl = None
 
     # STATISTICAL UTILITIES
@@ -56,6 +57,10 @@ class NANDInterface(metaclass=ABCMeta):
 
     @abstractclassmethod
     def failure_rate(self):
+        return NotImplemented
+
+    @abstractclassmethod
+    def gc_forced_rate(self):
         return NotImplemented
 
     @abstractclassmethod

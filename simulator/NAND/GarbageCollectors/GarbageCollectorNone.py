@@ -28,7 +28,7 @@ class GarbageCollectorNone(GarbageCollectorInterface):
         return False
 
     @check_block
-    def check_gc_block(self, block=0):
+    def check_gc_block(self, block=0, force_run=False):
         """
 
         :param block:
