@@ -422,7 +422,7 @@ class BaseNANDDisk(NANDInterface):
 
     @check_block
     @check_page
-    def host_write_page(self, block=0, page=0):
+    def host_write_page(self, block=0, page=0, gc_was_forced=False):
         """
 
         :param block:
@@ -430,13 +430,16 @@ class BaseNANDDisk(NANDInterface):
         :return:
         """
         # check if we need to run the garbage collector
-        self.run_gc()
+        self.run_gc(force_run=gc_was_forced)
 
         # execute the write
         res, status = self.raw_write_page(block=block, page=page)
         if res:
             # update statistics
             self._host_page_write_request += 1  # the host actually asked to write a page
+        elif not gc_was_forced and status == OPERATION_FAILED_DISKFULL:
+            # force a gc run and retry
+            return self.host_write_page(block=block, page=page, gc_was_forced=True)
 
         return res, status
 

@@ -32,18 +32,18 @@ class GarbageCollectorInterface(NANDInterface, metaclass=ABCMeta):
     def get_gc_name(self):
         return NotImplemented
 
-    def run_gc(self):
+    def run_gc(self, force_run=False):
         """
 
         :return:
         """
         # check the overall conditions to execute the gc
-        if self.check_gc_run():
+        if force_run or self.check_gc_run():
             # run the gc on every block
             execution = False
             for b in range(0, self.total_blocks):
                 # check the conditions on this block
-                if self.check_gc_block(block=b):
+                if force_run or self.check_gc_block(block=b):
                     # ok, run it
                     res = self.execute_gc_block(block=b)
                     if not execution and res:

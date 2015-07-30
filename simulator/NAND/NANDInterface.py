@@ -97,7 +97,7 @@ class NANDInterface(metaclass=ABCMeta):
         return NotImplemented
 
     @abstractclassmethod
-    def host_write_page(self, block=0, page=0):
+    def host_write_page(self, block=0, page=0, gc_was_forced=False):
         return NotImplemented
 
     @abstractclassmethod
