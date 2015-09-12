@@ -6,7 +6,7 @@
 
 """
 This is a demo just to play with the simulation library.
-This script just run the simulation. Then the analysis.py executes the fancy stats.
+This script just run the simulation. Then the analysis notebook executes the fancy stats.
 """
 
 # IMPORTS
