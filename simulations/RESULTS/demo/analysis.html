@@ -174,7 +174,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Demo-Simulation-Analysis">Demo Simulation Analysis<a class="anchor-link" href="#Demo-Simulation-Analysis">&#182;</a></h1><p>This is a demo of the simulator. The simulation collects 20K samples based on host write requests. This is a default simulation of a random writes of pages, 4 KiB each.</p>
+<h1 id="Demo-Simulation-Analysis">Demo Simulation Analysis<a class="anchor-link" href="#Demo-Simulation-Analysis">&#182;</a></h1><p>This is a demo of the simulator. The simulation collects 20 K samples based on host write requests. This simulation runs a random writes of pages, 4 KiB each.</p>
 <p>There are four NAND cells simulated. All NANDs have the following common features:</p>
 <ul>
 <li>page size:               4096 [Bytes] (4 [KiB]);</li>
@@ -185,8 +185,8 @@ div#notebook {
 <li>page write time:         45 [µs];</li>
 <li>page read time:          120 [µs];</li>
 <li>block erase time:        1500 [µs];</li>
-<li>max bandwidth read:      32.55 [MiB\s] (theoretical)</li>
-<li>max bandwidth write:     86.81 [MiB\s] (theoretical)</li>
+<li>max bandwidth read:      32.55 [MiB\s] (theoretical);</li>
+<li>max bandwidth write:     86.81 [MiB\s] (theoretical).</li>
 </ul>
 <p>Then, every NAND has different garbage collector policies:</p>
 <ul>
@@ -935,8 +935,7 @@ cRzHcRLDOxXHcRwnMf4fXuklRunYt9QAAAAASUVORK5CYII=
 <div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="c"># plot the IOPS</span>
-<span class="n">ah</span><span class="o">.</span><span class="n">plot_iops</span><span class="p">(</span><span class="n">sim_names</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span class="n">ah</span><span class="o">.</span><span class="n">plot_iops</span><span class="p">(</span><span class="n">sim_names</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -1628,7 +1627,7 @@ hYYxxhjP/h9Zi89Nbhm8YAAAAABJRU5ErkJggg==
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Bandwidth-over-written-pages">Bandwidth over written pages<a class="anchor-link" href="#Bandwidth-over-written-pages">&#182;</a></h2><p>This plot shows the bandwidth as seen by the host over the write requests.</p>
+<h2 id="Write-bandwidth-over-written-pages">Write bandwidth over written pages<a class="anchor-link" href="#Write-bandwidth-over-written-pages">&#182;</a></h2><p>This plot shows the write bandwidth as seen by the host over the write requests.</p>
 <p>In this simulation the <strong>basegc</strong> disk has a fall after 10K page requests (consistent with the IOPS and amplification factor plots).</p>
 
 </div>
