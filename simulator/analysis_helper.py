@@ -70,7 +70,7 @@ def plot_disk_write_time(sim_names, data):
 def plot_iops(sim_names, data):
     """ plot the IOPS """
     inline_plot(sim_names, data, yid=1,
-                xlabel="'Host write [pages]",
+                xlabel="Host write [pages]",
                 ylabel="Host IOPS")
 
 

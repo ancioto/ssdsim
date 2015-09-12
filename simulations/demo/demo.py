@@ -10,7 +10,7 @@ This script just run the simulation. Then the analysis notebook executes the fan
 """
 
 # IMPORTS
-from simulator.Simulation import Simulation, SIM_SAMPLING_HOST_WRITE, SIM_SAMPLING_ELAPSED_TIME
+from simulator.Simulation import Simulation, SIM_SAMPLING_HOST_WRITE
 from simulator.NAND.NANDFactory import get_instance, WRITEPOLICY_INPLACE, WRITEPOLICY_INPLACE_NOERASE, \
     GARBAGECOLLECTOR_SIMPLE
 
