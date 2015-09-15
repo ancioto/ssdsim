@@ -1,3 +1,34 @@
-Requires Python 3.4
+    1. INSTALL
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-TO BE DONE
+Requires at least Python 3.4.
+
+To install is suggested to create a virtualenv (https://virtualenv.readthedocs.org/en/latest), then just run
+
+        pip install -r requirements.txt
+
+from the repository root. Done!
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    2. USE
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Make sure the repository root is in the PYTHON_PATH, ie:
+
+        export PYTHONPATH=PYTHONPATH:./
+
+
+You can try out the demo just running:
+
+        python ./simulations/demo/demo.py
+
+CSV data are stored in simulations/RESULTS/demo.
+Now you can analyze the results with the iPython notebook. Always from the repository root start the server
+
+        ipython notebook -‌-no-browser -‌-ip 127.0.0.1 -‌-port 8888
+
+and open the notebook located at simulations/demo/analysis.ipynb
+
+
+Have fun!
