@@ -61,9 +61,9 @@ def inline_plot(sim_names, data, yid, xlabel, ylabel, xid=4, xlog=False, ylog=Fa
         plt.plot(data[n][xid], data[n][yid], linestyle='-', label=n)
 
     if xlog:
-        plt.yscale('log')
-    if ylog:
         plt.xscale('log')
+    if ylog:
+        plt.yscale('log')
 
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
@@ -92,34 +92,34 @@ def plot_disk_write_time(sim_names, data):
 
 def plot_iops(sim_names, data):
     """ plot the IOPS """
-    inline_plot(sim_names, data, yid=1,
+    inline_plot(sim_names, data, yid=1, xlog=True,
                 xlabel="Host write [pages]",
                 ylabel="Host IOPS")
 
 
 def plot_disk_af(sim_names, data):
     """ plot the Amplification factor """
-    inline_plot(sim_names, data, yid=3,
+    inline_plot(sim_names, data, yid=3, xlog=True,
                 xlabel="Host write [pages]",
                 ylabel="Write amplification")
 
 
 def plot_bandwidth(sim_names, data):
     """ plot the bandwidth """
-    inline_plot(sim_names, data, yid=2,
+    inline_plot(sim_names, data, yid=2, xlog=True,
                 xlabel="Host write [pages]",
                 ylabel="Bandwidth [MiB\s]")
 
 
 def plot_dirty_pages(sim_names, data):
     """ plot the dirty pages """
-    inline_plot(sim_names, data, yid=10,
+    inline_plot(sim_names, data, yid=10, xlog=True,
                 xlabel="Host write [pages]",
                 ylabel="Dirty [pages]")
 
 
 def plot_write_faiures(sim_names, data):
     """ plot the failures """
-    inline_plot(sim_names, data, yid=9,
+    inline_plot(sim_names, data, yid=9, xlog=True,
                 xlabel="Host write [pages]",
                 ylabel="Write failed [pages]")
