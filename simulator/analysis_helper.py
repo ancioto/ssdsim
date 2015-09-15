@@ -10,6 +10,7 @@ This file contains helper function for simulation data analysis and plotting, to
 import matplotlib.pyplot as plt
 from pathlib import Path
 import numpy as np
+from scipy import stats
 
 
 # LOAD DATA
@@ -28,6 +29,28 @@ def load_data(sim_names, path_string):
         data[n][0] = np.array(data[n][0] / 10 ** 6)
 
     return data
+
+
+# FINAL STATS
+def generate_final_stats(sim_names, data):
+    """ Some handful results """
+    for n in sim_names:
+        print("\n\n{:<15}{:<15}{:<15}{:<15}".format(n, 'Min', 'Max', 'Mean'))
+
+        for i, key in list(enumerate(['time',
+                                      'iops',
+                                      'bandwidth',
+                                      'amplification',
+                                      'host write',
+                                      'host read',
+                                      'disk write',
+                                      'disk read',
+                                      'block erased',
+                                      'failures',
+                                      'dirty pages'])):
+            r = stats.describe(data[n][i])
+            print("{:<15}{:<15}{:<15}{:,.2f} ± {:,.2f}".format(key, r.minmax[0], r.minmax[1],
+                                                              r.mean, np.sqrt(r.variance)))
 
 
 # PLOT HELPER
