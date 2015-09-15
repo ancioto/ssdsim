@@ -92,34 +92,34 @@ def plot_disk_write_time(sim_names, data):
 
 def plot_iops(sim_names, data):
     """ plot the IOPS """
-    inline_plot(sim_names, data, yid=1, xlog=True,
+    inline_plot(sim_names, data, yid=1,
                 xlabel="Host write [pages]",
                 ylabel="Host IOPS")
 
 
 def plot_disk_af(sim_names, data):
     """ plot the Amplification factor """
-    inline_plot(sim_names, data, yid=3, xlog=True,
+    inline_plot(sim_names, data, yid=3,
                 xlabel="Host write [pages]",
                 ylabel="Write amplification")
 
 
 def plot_bandwidth(sim_names, data):
     """ plot the bandwidth """
-    inline_plot(sim_names, data, yid=2, xlog=True,
+    inline_plot(sim_names, data, yid=2,
                 xlabel="Host write [pages]",
                 ylabel="Bandwidth [MiB\s]")
 
 
 def plot_dirty_pages(sim_names, data):
     """ plot the dirty pages """
-    inline_plot(sim_names, data, yid=10, xlog=True,
+    inline_plot(sim_names, data, yid=10,
                 xlabel="Host write [pages]",
                 ylabel="Dirty [pages]")
 
 
 def plot_write_faiures(sim_names, data):
     """ plot the failures """
-    inline_plot(sim_names, data, yid=9, xlog=True,
+    inline_plot(sim_names, data, yid=9,
                 xlabel="Host write [pages]",
                 ylabel="Write failed [pages]")
