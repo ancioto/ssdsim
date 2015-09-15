@@ -1,7 +1,7 @@
-Disk name: t50000
-WP: default		GC: simple (50000, 0.4)
+Disk name: t500000
+WP: default		GC: simple (500000, 0.4)
 128 pages per block, 256 blocks, 32768 pages of 4096 [Bytes]. Capacity 128.00 [MiB]
-Max bandwidth read: 32.55	 write: 86.81 [MiB\s] (theoretical)
+Max bandwidth read: 195.31	 write: 97.66 [MiB\s] (theoretical)
 Dirty: 0\0.00 ([pages]\[MiB])
 Empty: 32768\128.00 ([pages]\[MiB])
 In Use: 0\0.00 ([pages]\[MiB])
@@ -17,7 +17,39 @@ Write Amplification: 0.00
 Disk name: t1
 WP: default		GC: simple (1, 0.4)
 128 pages per block, 256 blocks, 32768 pages of 4096 [Bytes]. Capacity 128.00 [MiB]
-Max bandwidth read: 32.55	 write: 86.81 [MiB\s] (theoretical)
+Max bandwidth read: 195.31	 write: 97.66 [MiB\s] (theoretical)
+Dirty: 0\0.00 ([pages]\[MiB])
+Empty: 32768\128.00 ([pages]\[MiB])
+In Use: 0\0.00 ([pages]\[MiB])
+Host read: 0\0.00, write: 0\0.00 ([pages]\[MiB])
+Disk read: 0\0.00, write: 0\0.00 ([pages]\[MiB])
+Erased blocks: 0\0.00 ([blocks]\[MiB])
+Failures: 0.00 % (0 [pages], 0.00 [MiB])
+GC Forced count: 0
+Time: 0.00 [s]	 IOPS: 0	 Bandwidth: 0.00 [MiB\s]
+Write Amplification: 0.00
+
+
+Disk name: t1000000
+WP: default		GC: simple (1000000, 0.4)
+128 pages per block, 256 blocks, 32768 pages of 4096 [Bytes]. Capacity 128.00 [MiB]
+Max bandwidth read: 195.31	 write: 97.66 [MiB\s] (theoretical)
+Dirty: 0\0.00 ([pages]\[MiB])
+Empty: 32768\128.00 ([pages]\[MiB])
+In Use: 0\0.00 ([pages]\[MiB])
+Host read: 0\0.00, write: 0\0.00 ([pages]\[MiB])
+Disk read: 0\0.00, write: 0\0.00 ([pages]\[MiB])
+Erased blocks: 0\0.00 ([blocks]\[MiB])
+Failures: 0.00 % (0 [pages], 0.00 [MiB])
+GC Forced count: 0
+Time: 0.00 [s]	 IOPS: 0	 Bandwidth: 0.00 [MiB\s]
+Write Amplification: 0.00
+
+
+Disk name: t50000
+WP: default		GC: simple (50000, 0.4)
+128 pages per block, 256 blocks, 32768 pages of 4096 [Bytes]. Capacity 128.00 [MiB]
+Max bandwidth read: 195.31	 write: 97.66 [MiB\s] (theoretical)
 Dirty: 0\0.00 ([pages]\[MiB])
 Empty: 32768\128.00 ([pages]\[MiB])
 In Use: 0\0.00 ([pages]\[MiB])
@@ -33,39 +65,7 @@ Write Amplification: 0.00
 Disk name: t5000
 WP: default		GC: simple (5000, 0.4)
 128 pages per block, 256 blocks, 32768 pages of 4096 [Bytes]. Capacity 128.00 [MiB]
-Max bandwidth read: 32.55	 write: 86.81 [MiB\s] (theoretical)
-Dirty: 0\0.00 ([pages]\[MiB])
-Empty: 32768\128.00 ([pages]\[MiB])
-In Use: 0\0.00 ([pages]\[MiB])
-Host read: 0\0.00, write: 0\0.00 ([pages]\[MiB])
-Disk read: 0\0.00, write: 0\0.00 ([pages]\[MiB])
-Erased blocks: 0\0.00 ([blocks]\[MiB])
-Failures: 0.00 % (0 [pages], 0.00 [MiB])
-GC Forced count: 0
-Time: 0.00 [s]	 IOPS: 0	 Bandwidth: 0.00 [MiB\s]
-Write Amplification: 0.00
-
-
-Disk name: t5000000
-WP: default		GC: simple (5000000, 0.4)
-128 pages per block, 256 blocks, 32768 pages of 4096 [Bytes]. Capacity 128.00 [MiB]
-Max bandwidth read: 32.55	 write: 86.81 [MiB\s] (theoretical)
-Dirty: 0\0.00 ([pages]\[MiB])
-Empty: 32768\128.00 ([pages]\[MiB])
-In Use: 0\0.00 ([pages]\[MiB])
-Host read: 0\0.00, write: 0\0.00 ([pages]\[MiB])
-Disk read: 0\0.00, write: 0\0.00 ([pages]\[MiB])
-Erased blocks: 0\0.00 ([blocks]\[MiB])
-Failures: 0.00 % (0 [pages], 0.00 [MiB])
-GC Forced count: 0
-Time: 0.00 [s]	 IOPS: 0	 Bandwidth: 0.00 [MiB\s]
-Write Amplification: 0.00
-
-
-Disk name: t500000
-WP: default		GC: simple (500000, 0.4)
-128 pages per block, 256 blocks, 32768 pages of 4096 [Bytes]. Capacity 128.00 [MiB]
-Max bandwidth read: 32.55	 write: 86.81 [MiB\s] (theoretical)
+Max bandwidth read: 195.31	 write: 97.66 [MiB\s] (theoretical)
 Dirty: 0\0.00 ([pages]\[MiB])
 Empty: 32768\128.00 ([pages]\[MiB])
 In Use: 0\0.00 ([pages]\[MiB])
@@ -81,7 +81,7 @@ Write Amplification: 0.00
 Disk name: t500
 WP: default		GC: simple (500, 0.4)
 128 pages per block, 256 blocks, 32768 pages of 4096 [Bytes]. Capacity 128.00 [MiB]
-Max bandwidth read: 32.55	 write: 86.81 [MiB\s] (theoretical)
+Max bandwidth read: 195.31	 write: 97.66 [MiB\s] (theoretical)
 Dirty: 0\0.00 ([pages]\[MiB])
 Empty: 32768\128.00 ([pages]\[MiB])
 In Use: 0\0.00 ([pages]\[MiB])

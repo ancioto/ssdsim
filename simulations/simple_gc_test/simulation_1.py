@@ -29,8 +29,8 @@ def main():
             ("t500", 500, '0.4'),  # original parameters (500 microseconds)
             ("t5000", 5000, '0.4'),  # 5000 microseconds
             ("t50000", 50000, '0.4'),  # 50000 microseconds
-            ("t500000", 500000, '0.4'),  # 500000 microseconds
-            ("t5000000", 5000000, '0.4')):  # 5000000 microseconds
+            ("t500000", 500000, '0.4'),  # 500000 microseconds (0.5 seconds)
+            ("t1000000", 1000000, '0.4')):  # 1000000 microseconds (1 second)
         demo.add_disk(name, get_instance(garbagecollector=GARBAGECOLLECTOR_SIMPLE,
                                          gc_params={'mintime': mintime,
                                                     'dirtiness': dirtiness}))
