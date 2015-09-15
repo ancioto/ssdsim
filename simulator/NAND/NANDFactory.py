@@ -60,7 +60,7 @@ def get_class(writepolicy=WRITEPOLICY_DEFAULT, garbagecollector=GARBAGECOLLECTOR
 
 def get_instance(writepolicy=WRITEPOLICY_DEFAULT, garbagecollector=GARBAGECOLLECTOR_NONE,
                  total_blocks=256, pages_per_block=128, page_size=4096,
-                 write_page_time=45, read_page_time=120, erase_block_time=1500, gc_params=None):
+                 write_page_time=40, read_page_time=20, erase_block_time=1500, gc_params=None):
     """
 
     :param writepolicy:

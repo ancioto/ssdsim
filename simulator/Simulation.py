@@ -108,6 +108,10 @@ class Simulation(object):
         """ Randomly generated samples for every disk (as they may have different specs).
         """
 
+        self._drift_attempts = 3
+        """ TO be used to handle retries.
+        """
+
         self._samples_drift = dict()
         """ TO be used to handle retries.
         """
@@ -243,20 +247,24 @@ class Simulation(object):
         """
         # write of a single page in a block
         for d in self._disks:
-            res, status = self._disks[d].host_write_page(block=self._samples[d][0][self._samples_drift[d]],
-                                                         page=self._samples[d][1][self._samples_drift[d]])
+            attempts = self._drift_attempts
+            try_again = True
 
-            # ok, increase the index
-            self._samples_drift[d] += 1
-
-            # is a dirty write? retry!
-            if not res and status == OPERATION_FAILED_DIRTY:
-                # retry one more time
-                self._disks[d].host_write_page(block=self._samples[d][0][self._samples_drift[d]],
-                                               page=self._samples[d][1][self._samples_drift[d]])
+            while try_again and attempts > 0:
+                # execute
+                res, status = self._disks[d].host_write_page(block=self._samples[d][0][self._samples_drift[d]],
+                                                             page=self._samples[d][1][self._samples_drift[d]])
 
                 # ok, increase the index
                 self._samples_drift[d] += 1
+
+                # decrease the attempts
+                attempts -= 1
+
+                # is a dirty write? retry!
+                if res or status != OPERATION_FAILED_DIRTY:
+                    # we need to try again!
+                    try_again = False
 
     @check_init
     def extract_and_store_stats(self, current_index):
@@ -331,8 +339,10 @@ class Simulation(object):
             #   the first element is the block index samples
             #   the second element is the page index samples
             # we generate a double amount of samples as we retry one time each first attempt in case of failures
-            self._samples[d] = (randint.rvs(0, self._disks[d].total_blocks, size=self.sim_sample_size * 2),
-                                randint.rvs(0, self._disks[d].pages_per_block, size=self.sim_sample_size * 2))
+            self._samples[d] = (randint.rvs(0, self._disks[d].total_blocks,
+                                            size=self.sim_sample_size * self._drift_attempts),
+                                randint.rvs(0, self._disks[d].pages_per_block,
+                                            size=self.sim_sample_size * self._drift_attempts))
 
             # set the initial drift to zero
             self._samples_drift[d] = 0
