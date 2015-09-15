@@ -1,96 +1,96 @@
-Disk name: d40
-WP: default		GC: simple (500, 0.4)
+Disk name: d100
+WP: default		GC: simple (500, 1.0)
 128 pages per block, 256 blocks, 32768 pages of 4096 [Bytes]. Capacity 128.00 [MiB]
-Max bandwidth read: 32.55	 write: 86.81 [MiB\s] (theoretical)
-Dirty: 6983\27.28 ([pages]\[MiB])
-Empty: 547\2.14 ([pages]\[MiB])
-In Use: 25238\98.59 ([pages]\[MiB])
-Host read: 0\0.00, write: 96285\376.11 ([pages]\[MiB])
-Disk read: 92104\359.78, write: 188389\735.89 ([pages]\[MiB])
-Erased blocks: 1232\616.00 ([blocks]\[MiB])
+Max bandwidth read: 195.31	 write: 97.66 [MiB\s] (theoretical)
+Dirty: 857\3.35 ([pages]\[MiB])
+Empty: 3539\13.82 ([pages]\[MiB])
+In Use: 28372\110.83 ([pages]\[MiB])
+Host read: 0\0.00, write: 99340\388.05 ([pages]\[MiB])
+Disk read: 224801\878.13, write: 324141\1266.18 ([pages]\[MiB])
+Erased blocks: 2304\1152.00 ([blocks]\[MiB])
 Failures: 0.00 % (0 [pages], 0.00 [MiB])
-GC Forced count: 0
-Time: 21.38 [s]	 IOPS: 13121	 Bandwidth: 17.59 [MiB\s]
-Write Amplification: 1.96
+GC Forced count: 9
+Time: 20.92 [s]	 IOPS: 26243	 Bandwidth: 18.55 [MiB\s]
+Write Amplification: 3.26
 
 
 Disk name: d30
 WP: default		GC: simple (500, 0.3)
 128 pages per block, 256 blocks, 32768 pages of 4096 [Bytes]. Capacity 128.00 [MiB]
-Max bandwidth read: 32.55	 write: 86.81 [MiB\s] (theoretical)
-Dirty: 5336\20.84 ([pages]\[MiB])
-Empty: 480\1.88 ([pages]\[MiB])
-In Use: 26952\105.28 ([pages]\[MiB])
-Host read: 0\0.00, write: 98003\382.82 ([pages]\[MiB])
-Disk read: 142934\558.34, write: 240937\941.16 ([pages]\[MiB])
-Erased blocks: 1685\842.50 ([blocks]\[MiB])
+Max bandwidth read: 195.31	 write: 97.66 [MiB\s] (theoretical)
+Dirty: 5462\21.34 ([pages]\[MiB])
+Empty: 288\1.12 ([pages]\[MiB])
+In Use: 27018\105.54 ([pages]\[MiB])
+Host read: 0\0.00, write: 99677\389.36 ([pages]\[MiB])
+Disk read: 146433\572.00, write: 246110\961.37 ([pages]\[MiB])
+Erased blocks: 1723\861.50 ([blocks]\[MiB])
 Failures: 0.00 % (0 [pages], 0.00 [MiB])
 GC Forced count: 0
-Time: 30.52 [s]	 IOPS: 12577	 Bandwidth: 12.54 [MiB\s]
-Write Amplification: 2.46
-
-
-Disk name: d100
-WP: default		GC: simple (500, 1.0)
-128 pages per block, 256 blocks, 32768 pages of 4096 [Bytes]. Capacity 128.00 [MiB]
-Max bandwidth read: 32.55	 write: 86.81 [MiB\s] (theoretical)
-Dirty: 3567\13.93 ([pages]\[MiB])
-Empty: 970\3.79 ([pages]\[MiB])
-In Use: 28231\110.28 ([pages]\[MiB])
-Host read: 0\0.00, write: 97270\379.96 ([pages]\[MiB])
-Disk read: 196672\768.25, write: 293942\1148.21 ([pages]\[MiB])
-Erased blocks: 2048\1024.00 ([blocks]\[MiB])
-Failures: 0.00 % (0 [pages], 0.00 [MiB])
-GC Forced count: 8
-Time: 39.90 [s]	 IOPS: 12296	 Bandwidth: 9.52 [MiB\s]
-Write Amplification: 3.02
-
-
-Disk name: d10
-WP: default		GC: simple (500, 0.1)
-128 pages per block, 256 blocks, 32768 pages of 4096 [Bytes]. Capacity 128.00 [MiB]
-Max bandwidth read: 32.55	 write: 86.81 [MiB\s] (theoretical)
-Dirty: 1595\6.23 ([pages]\[MiB])
-Empty: 1189\4.64 ([pages]\[MiB])
-In Use: 29984\117.12 ([pages]\[MiB])
-Host read: 0\0.00, write: 99816\389.91 ([pages]\[MiB])
-Disk read: 516212\2016.45, write: 616028\2406.36 ([pages]\[MiB])
-Erased blocks: 5249\2624.50 ([blocks]\[MiB])
-Failures: 0.00 % (0 [pages], 0.00 [MiB])
-GC Forced count: 0
-Time: 97.54 [s]	 IOPS: 11608	 Bandwidth: 4.00 [MiB\s]
-Write Amplification: 6.17
-
-
-Disk name: d50
-WP: default		GC: simple (500, 0.5)
-128 pages per block, 256 blocks, 32768 pages of 4096 [Bytes]. Capacity 128.00 [MiB]
-Max bandwidth read: 32.55	 write: 86.81 [MiB\s] (theoretical)
-Dirty: 417\1.63 ([pages]\[MiB])
-Empty: 4431\17.31 ([pages]\[MiB])
-In Use: 27920\109.06 ([pages]\[MiB])
-Host read: 0\0.00, write: 96934\378.65 ([pages]\[MiB])
-Disk read: 195704\764.47, write: 292638\1143.12 ([pages]\[MiB])
-Erased blocks: 2065\1032.50 ([blocks]\[MiB])
-Failures: 0.00 % (0 [pages], 0.00 [MiB])
-GC Forced count: 7
-Time: 39.75 [s]	 IOPS: 12285	 Bandwidth: 9.53 [MiB\s]
-Write Amplification: 3.02
+Time: 15.36 [s]	 IOPS: 25560	 Bandwidth: 25.35 [MiB\s]
+Write Amplification: 2.47
 
 
 Disk name: d90
 WP: default		GC: simple (500, 0.9)
 128 pages per block, 256 blocks, 32768 pages of 4096 [Bytes]. Capacity 128.00 [MiB]
-Max bandwidth read: 32.55	 write: 86.81 [MiB\s] (theoretical)
-Dirty: 2886\11.27 ([pages]\[MiB])
-Empty: 1674\6.54 ([pages]\[MiB])
-In Use: 28208\110.19 ([pages]\[MiB])
-Host read: 0\0.00, write: 97153\379.50 ([pages]\[MiB])
-Disk read: 196085\765.96, write: 293238\1145.46 ([pages]\[MiB])
-Erased blocks: 2048\1024.00 ([blocks]\[MiB])
+Max bandwidth read: 195.31	 write: 97.66 [MiB\s] (theoretical)
+Dirty: 764\2.98 ([pages]\[MiB])
+Empty: 3709\14.49 ([pages]\[MiB])
+In Use: 28295\110.53 ([pages]\[MiB])
+Host read: 0\0.00, write: 99332\388.02 ([pages]\[MiB])
+Disk read: 224639\877.50, write: 323971\1265.51 ([pages]\[MiB])
+Erased blocks: 2304\1152.00 ([blocks]\[MiB])
 Failures: 0.00 % (0 [pages], 0.00 [MiB])
-GC Forced count: 8
-Time: 39.80 [s]	 IOPS: 12295	 Bandwidth: 9.54 [MiB\s]
-Write Amplification: 3.02
+GC Forced count: 9
+Time: 20.91 [s]	 IOPS: 26240	 Bandwidth: 18.56 [MiB\s]
+Write Amplification: 3.26
+
+
+Disk name: d50
+WP: default		GC: simple (500, 0.5)
+128 pages per block, 256 blocks, 32768 pages of 4096 [Bytes]. Capacity 128.00 [MiB]
+Max bandwidth read: 195.31	 write: 97.66 [MiB\s] (theoretical)
+Dirty: 3028\11.83 ([pages]\[MiB])
+Empty: 1525\5.96 ([pages]\[MiB])
+In Use: 28215\110.21 ([pages]\[MiB])
+Host read: 0\0.00, write: 99254\387.71 ([pages]\[MiB])
+Disk read: 195523\763.76, write: 294777\1151.47 ([pages]\[MiB])
+Erased blocks: 2059\1029.50 ([blocks]\[MiB])
+Failures: 0.00 % (0 [pages], 0.00 [MiB])
+GC Forced count: 7
+Time: 18.79 [s]	 IOPS: 26094	 Bandwidth: 20.63 [MiB\s]
+Write Amplification: 2.97
+
+
+Disk name: d10
+WP: default		GC: simple (500, 0.1)
+128 pages per block, 256 blocks, 32768 pages of 4096 [Bytes]. Capacity 128.00 [MiB]
+Max bandwidth read: 195.31	 write: 97.66 [MiB\s] (theoretical)
+Dirty: 1597\6.24 ([pages]\[MiB])
+Empty: 1234\4.82 ([pages]\[MiB])
+In Use: 29937\116.94 ([pages]\[MiB])
+Host read: 0\0.00, write: 99992\390.59 ([pages]\[MiB])
+Disk read: 517144\2020.09, write: 617136\2410.69 ([pages]\[MiB])
+Erased blocks: 5266\2633.00 ([blocks]\[MiB])
+Failures: 0.00 % (0 [pages], 0.00 [MiB])
+GC Forced count: 0
+Time: 42.93 [s]	 IOPS: 26423	 Bandwidth: 9.10 [MiB\s]
+Write Amplification: 6.17
+
+
+Disk name: d40
+WP: default		GC: simple (500, 0.4)
+128 pages per block, 256 blocks, 32768 pages of 4096 [Bytes]. Capacity 128.00 [MiB]
+Max bandwidth read: 195.31	 write: 97.66 [MiB\s] (theoretical)
+Dirty: 1217\4.75 ([pages]\[MiB])
+Empty: 5141\20.08 ([pages]\[MiB])
+In Use: 26410\103.16 ([pages]\[MiB])
+Host read: 0\0.00, write: 99300\387.89 ([pages]\[MiB])
+Disk read: 133213\520.36, write: 232513\908.25 ([pages]\[MiB])
+Erased blocks: 1614\807.00 ([blocks]\[MiB])
+Failures: 0.00 % (0 [pages], 0.00 [MiB])
+GC Forced count: 2
+Time: 14.39 [s]	 IOPS: 25423	 Bandwidth: 26.96 [MiB\s]
+Write Amplification: 2.34
 
 
