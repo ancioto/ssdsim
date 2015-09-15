@@ -23,7 +23,7 @@ def main():
     # create various disks with different gc parameters
     for name, blocks, pages in (
             # Increase size
-            ("256M", 256, 128),  # 256 MiB
+            ("128M", 256, 128),  # 128 MiB
             ("512M", 512, 256),  # 512 MiB
             ("2G", 1024, 512),  # 2 GiB
             ("8G", 2048, 1024),  # 8 GiB
