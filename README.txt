@@ -1,9 +1,3 @@
-This is the code repository for Computing Infrastructure course @ Politecnico di Milano
-Prof. Gribaudo
-Academic year 2014/2015, Computer Science Engineering Master Degree.
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
 This is a simple simulator to study the Write Amplification Factor on SSD.
 
@@ -12,7 +6,6 @@ Detailed instructions are avaialble in INSTRUCTION.txt .
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Written and developed by Nicholas Fiorentini, July 2015
-    nicholas.fiorentini@mail.polimi.it
     https://lordgordon.com
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
